@@ -12,12 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="users")
@@ -47,6 +50,26 @@ public class User {
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(
+			name="users_stock",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+	)
+	private List<Ingredient> stockedIngredients;
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(
+			name="users_shopping",
+			joinColumns = @JoinColumn(name="user_id"),
+			inverseJoinColumns = @JoinColumn(name="ingredient_id")
+	)
+	private List<Ingredient> shoppingIngredients;
+	
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	@JsonIgnore
+	private List<Rating> ratings;
 	
 	public User() {}
 	
@@ -119,12 +142,18 @@ public class User {
 		this.updatedAt = new Date();
 	}
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name="users_stock",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-	)
-	private List<Ingredient> stockedIngredients;
+	public List<Ingredient> getStockedIngredients() {
+		return stockedIngredients;
+	}
 	
+	public List<Ingredient> getShoppingIngredients() {
+		return shoppingIngredients;
+	}
+	
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
 }
