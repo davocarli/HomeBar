@@ -21,6 +21,11 @@ public class UserService {
 		return repo.findAll();
 	}
 	
+	// Get by username
+	public User findByUsername(String username) {
+		return repo.findByUsername(username);
+	}
+	
 	// Register the user and generate a hash of their pwd
 	public User registerUser(User user) {
 		String hashed = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
