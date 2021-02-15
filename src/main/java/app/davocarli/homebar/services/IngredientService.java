@@ -1,5 +1,6 @@
 package app.davocarli.homebar.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -28,13 +29,12 @@ public class IngredientService {
 		return repo.findAllIngredientNames();
 	}
 	
-	// Get All Substitutes for this Ingredient Name
-	public String getSubstituteRecommendations(String ingredientName) {
+	// Get All Substitutes for all ingredients with this name
+	public List<String> getSubstituteRecommendations(String ingredientName) {
 		List<String> allSubstitutes = repo.findIngredientRecommendations(ingredientName);
 		String joinedList = String.join("\n", allSubstitutes);
 		Set<String> uniqueSet = new HashSet<String>(Arrays.asList(joinedList.split("\n")));
-		String finalList = String.join("\n", uniqueSet);
-		return finalList;
+		return new ArrayList<String>(uniqueSet);
 	}
 	
 	// Get All Ingredients with the selected name

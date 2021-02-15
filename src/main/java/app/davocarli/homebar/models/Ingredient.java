@@ -65,4 +65,8 @@ public class Ingredient {
 	public void setSubstituteNames(String substituteNames) {
 		this.substituteNames = substituteNames;
 	}
+	
+	public String getFullIngredient() {
+		return ingredientName + "\n" + substituteNames;
+	}
 }
