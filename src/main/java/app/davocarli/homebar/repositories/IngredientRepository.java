@@ -12,9 +12,9 @@ import app.davocarli.homebar.models.Ingredient;
 public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
 	List<Ingredient> findAll();
 	List<Ingredient> findAllByName(String name);
-	@Query("SELECT DISTINCT substitutes FROM Ingredients WHERE ingredientName = ?1")
+	@Query("SELECT DISTINCT substituteNames FROM Ingredient WHERE ingredientName = ?1")
 	List<String> findIngredientRecommendations(String ingredientName);
-	@Query("SELECT DISTINCT ingredientName FROM Ingredients")
+	@Query("SELECT DISTINCT name FROM Ingredient")
 	List<String> findAllIngredientNames();
-	Ingredient findByIngredientNameAndBySubstituteNames(String ingredientName, String substituteNames);
+	Ingredient findByNameAndSubstituteNames(String ingredientName, String substituteNames);
 }

@@ -22,7 +22,7 @@ public class RecipeService {
 	
 	// Get Sorted
 	public List<Recipe> getSorted() {
-		return repo.findAllByOrderByRatingDesc();
+		return repo.findAllByOrderByAverageRatingDesc();
 	}
 	
 	// Get One (By ID)

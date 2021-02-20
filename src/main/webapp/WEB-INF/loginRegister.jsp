@@ -6,49 +6,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link href="/uikit-3.6.16/css/uikit.min.css">
-    <script src="/uikit-3.6.16/js/uikit-min.js"></script>
-    <script src="/uikit-3.6.16/js/uikit-icons-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/uikit.min.css">
+    <script src="/js/uikit.min.js"></script>
+    <script src="/js/uikit-icons.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body">
-	<div id="register-div" style="width: 49%; display: inline-block;">
-		<h2>Register</h2>
-		<p class="text-danger">${ registrationErrors }</p>
-		<form:form method="POST" action="/register" modelAttribute="user">
-			<p class="text-danger"><form:errors path="user.*"/></p>
-			<div class="mb-3">
-				<form:label class="form-label" path="name">First Name:</form:label>
-				<form:input class="form-control" path="name"/>
+	<body class="uk-flex uk-flex-center uk-flex-middle uk-background-muted uk-height-viewport" data-uk-height-viewport>
+		<div class="uk-width-medium uk-padding-small">
+			<div class="uk-text-center">
+				<h1>home-bar.app</h1>
 			</div>
-			<div class="mb-3">
-				<form:label class="form-label" path="email">Email:</form:label>
-				<form:input type="email" class="form-control" path="email"></form:input>
+			<!-- login -->
+			<form:form method="POST" action="/login">
+				<fieldset class="uk-fieldset">
+					<div class="uk-margin-small">
+						<div class="uk-inline uk-width-1-1">
+							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"></span>
+							<input class="uk-input uk-border-pill" required placeholder="email" type="text">
+						</div>
+					</div>
+					<div class="uk-margin-small">
+						<div class="uk-inline uk-width-1-1">
+							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+							<input class="uk-input uk-border-pill" required placeholder="password" type="password">
+						</div>
+					</div>
+					<div class="uk-margin-bottom">
+						<button type="submit" class="uk-button uk-button-primary uk-border-pill uk-width-1-1">LOG IN</button>
+					</div>
+				</fieldset>
+			</form:form>
+			<!-- /login -->
+			<div class="uk-text-center">
+				<a class="uk-link-reset uk-text-small toggle-class" href="/register">Register</a>
 			</div>
-			<div class="mb-3">
-				<form:label class="form-label" type="password" path="password">Password:</form:label>
-				<form:input class="form-control" type="password" path="password"/>
-			</div>
-			<div class="mb-3">
-				<form:label class="form-label" type="password" path="passwordConfirmation">Confirm Password:</form:label>
-				<form:input class="form-control" type="password" path="passwordConfirmation"/>
-			</div>
-			<input class="btn btn-secondary rounded-pill float-end" type="submit" value="Register"/>
-		</form:form>
-	</div>
-	<div id="login-div" style="width: 49%; display: inline-block; float: right;">
-		<h2>Login</h2>
-		<p class="text-danger"><c:out value="${ loginErrors }"/></p>
-		<form method="post" action="/login">
-			<div class="mb-3">
-				<label class="form-label" type="email" for="email">Email:</label>
-				<input class="form-control" type="email" id="email" name="email"/>
-			</div>
-			<div class="mb-3">
-				<label class="form-label" for="password">Password:</label>
-				<input class="form-control" type="password" id="passtword" name="password"/>
-			</div>
-			<input class="btn btn-secondary rounded-pill float-end" type="submit" value="Login"/>
-		</form>
-	</div>
+		</div>
 </body>

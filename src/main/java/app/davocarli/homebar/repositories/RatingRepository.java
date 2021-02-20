@@ -13,6 +13,6 @@ import app.davocarli.homebar.models.Recipe;
 public interface RatingRepository extends CrudRepository<Rating, Long> {
 	List<Rating> findAll();
 	List<Rating> findAllByRecipe(Recipe recipe);
-	@Query("SELECT AVG(ratingValue) FROM ratings WHERE recipe = ?1")
+	@Query("SELECT AVG(ratingValue) FROM Rating WHERE recipe = ?1")
 	Long findAverageRating(Recipe recipe);
 }

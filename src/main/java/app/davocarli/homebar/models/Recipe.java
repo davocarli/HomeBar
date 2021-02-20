@@ -55,6 +55,8 @@ public class Recipe {
 	@JsonIgnore
 	private List<Rating> ratings;
 	
+	private Long averageRating;
+	
 	public Long getId() {
 		return id;
 	}
@@ -97,5 +99,12 @@ public class Recipe {
 	}
 	public User getCreator() {
 		return creator;
+	}
+	
+	public Long getAverageRating() {
+		return averageRating;
+	}
+	public void setAverageRating(Long rating) {
+		this.averageRating = rating;
 	}
 }

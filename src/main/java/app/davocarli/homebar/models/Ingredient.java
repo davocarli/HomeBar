@@ -22,7 +22,7 @@ public class Ingredient {
 	private Long id;
 	
 	@Size(min=1, message="Ingredient name cannot be empty.")
-	private String ingredientName;
+	private String name;
 	
 	// Substitute Names will be a "\n" separated list
 	private String substituteNames;
@@ -53,10 +53,10 @@ public class Ingredient {
 	}
 	
 	public String getIngredientName() {
-		return ingredientName;
+		return name;
 	}
 	public void setIngredientName(String ingredientName) {
-		this.ingredientName = ingredientName;
+		this.name = ingredientName;
 	}
 	
 	public String getSubstituteNames() {
@@ -67,6 +67,6 @@ public class Ingredient {
 	}
 	
 	public String getFullIngredient() {
-		return ingredientName + "\n" + substituteNames;
+		return name + "\n" + substituteNames;
 	}
 }

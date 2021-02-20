@@ -46,7 +46,7 @@ public class IngredientService {
 	// This is used to avoid creating a brand new ingredient if
 	// an identical one already exists
 	public Ingredient getIngredient(String ingredientName, String substituteNames) {
-		return repo.findByIngredientNameAndBySubstituteNames(ingredientName, substituteNames);
+		return repo.findByNameAndSubstituteNames(ingredientName, substituteNames);
 	}
 	
 	// Get One (By ID)
