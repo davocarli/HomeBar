@@ -1,15 +1,12 @@
 package app.davocarli.homebar.models;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -27,21 +24,19 @@ public class Ingredient {
 	// Substitute Names will be a "\n" separated list
 	private String substituteNames;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name="users_stock",
-			joinColumns=@JoinColumn(name="ingredient_id"),
-			inverseJoinColumns=@JoinColumn(name="user_id")
-	)
-	private List<User> stockedUsers;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="recipe_id")
+	private Recipe recipe;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name="users_shopping",
-			joinColumns=@JoinColumn(name="ingredient_id"),
-			inverseJoinColumns=@JoinColumn(name="user_id")
-	)
-	private List<User> shoppingUsers;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	private User user;
+	
+	// Used to identify how this ingredient is being used, to avoid needing an additional
+	// model. Status should always be one of "stock", "shop", or "recipe".
+	private String status;
+	
+	private String amount;
 	
 	public Ingredient() {}
 	
@@ -52,10 +47,10 @@ public class Ingredient {
 		this.id = id;
 	}
 	
-	public String getIngredientName() {
+	public String getName() {
 		return name;
 	}
-	public void setIngredientName(String ingredientName) {
+	public void setName(String ingredientName) {
 		this.name = ingredientName;
 	}
 	
@@ -67,6 +62,42 @@ public class Ingredient {
 	}
 	
 	public String getFullIngredient() {
-		return name + "\n" + substituteNames;
+		return name + "|" + substituteNames;
+	}
+	
+	public Recipe getRecipe() {
+		return recipe;
+	}
+	public void setRecipe(Recipe recipe) {
+		this.recipe = recipe;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getStockedList() {
+		if (status.equals("stock")) {
+			return getFullIngredient();
+		} else {
+			return "";
+		}
+	}
+	
+	public String getAmount() {
+		return amount;
+	}
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 }

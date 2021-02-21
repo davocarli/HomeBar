@@ -1,0 +1,37 @@
+.selectize-control.uk-input {
+	height: auto;
+	padding-bottom: -10px;
+}
+.selectize-input, .selectize-input.has-items {
+	border: none;
+	min-height: 0px;
+	padding-bottom: 0px;
+}
+.selectize-input.focus {
+	border: none;
+	box-shadow: none;
+}
+.ingredient-list {
+	margin-top: 10px;
+}
+.ingredient-list .uk-input.selectize-control {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+.clickable-card {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+.uk-card-body {
+	padding: 10px;
+}
+.drink-filter-disable {
+	display: none;
+}
+.drink-filter-disable a {
+	background-color: #1e87f0!important;
+	color: #fff!important;
+}

@@ -2,6 +2,7 @@ package app.davocarli.homebar.models;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -51,22 +49,9 @@ public class User {
 	private Date createdAt;
 	private Date updatedAt;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name="users_stock",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-	)
-	private List<Ingredient> stockedIngredients;
-	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name="users_shopping",
-			joinColumns = @JoinColumn(name="user_id"),
-			inverseJoinColumns = @JoinColumn(name="ingredient_id")
-	)
-	private List<Ingredient> shoppingIngredients;
-	
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	private List<Ingredient> ingredients;
+		
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	@JsonIgnore
 	private List<Rating> ratings;
@@ -142,12 +127,15 @@ public class User {
 		this.updatedAt = new Date();
 	}
 	
-	public List<Ingredient> getStockedIngredients() {
-		return stockedIngredients;
+	public List<Ingredient> getIngredients() {
+		return ingredients;
+	}
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 	
-	public List<Ingredient> getShoppingIngredients() {
-		return shoppingIngredients;
+	public String getFullStock() {
+		return ingredients.stream().map(Ingredient::getStockedList).collect(Collectors.joining("|")).replace("||", "|");
 	}
 	
 	public List<Rating> getRatings() {

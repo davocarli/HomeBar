@@ -18,22 +18,23 @@
 				<h1>home-bar.app</h1>
 			</div>
 			<!-- login -->
-			<form:form method="POST" action="/login">
+			<form:form method="POST" action="/login" modelAttribute="user">
+				<div class="uk-text-center"><p class="uk-text-danger">${ loginErrors }</p></div>
 				<fieldset class="uk-fieldset">
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"></span>
-							<input class="uk-input uk-border-pill" required placeholder="email" type="text">
+							<form:input class="uk-input uk-border-pill" required="true" placeholder="email" type="email" path="email"/>
 						</div>
 					</div>
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
-							<input class="uk-input uk-border-pill" required placeholder="password" type="password">
+							<form:input class="uk-input uk-border-pill" required="true" placeholder="password" type="password" path="password"/>
 						</div>
 					</div>
 					<div class="uk-margin-bottom">
-						<button type="submit" class="uk-button uk-button-primary uk-border-pill uk-width-1-1">LOG IN</button>
+						<input class="uk-button uk-button-primary uk-border-pill uk-width-1-1" type="submit" value="LOG IN"/>
 					</div>
 				</fieldset>
 			</form:form>

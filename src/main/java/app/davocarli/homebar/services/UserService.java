@@ -52,4 +52,9 @@ public class UserService {
 			return null;
 		}
 	}
+	
+	// Update User
+	public User updateUser(User user) {
+		return repo.save(user);
+	}
 }
