@@ -1,48 +1,96 @@
+// // Compress Image File
+// function compressImage(file, width) {
+// 	const reader = new FileReader();
+
+// 	reader.readAsDataURL(file);
+
+// 	reader.onload = function(event) {
+// 		const imgElement = document.createElement('img');
+// 		imgElement.src = event.target.result;
+
+// 		imgElement.onload = function(e) {
+// 			const canvas = document.createElement("canvas");
+
+// 			const scaleSize = width / e.target.width;
+// 			canvas.width = width;
+// 			canvas.height = e.target.height * scaleSize;
+
+// 			const ctx = canvas.getContext("2d");
+
+// 			ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+// 			return canvas;
+// 		}
+// 	}
+// }
+
 // File Upload
 async function uploadFile() {
 
-	var file = fileupload.files[0];
+	const file = fileupload.files[0];
 
 	const recipeId = $('#upload-button').html();
 
-	if (file) {
-		console.log("FILE");
-		const reader = new FileReader();
+	let formData = new FormData();
+	formData.append("file", file);
 
-		reader.readAsDataURL(file);
+	let response = await fetch("/recipe/" + recipeId + "/upload", {
+		method: "POST",
+		body: formData
+	})
 
-		reader.onload = function(event) {
-			const imgElement = document.createElement('img');
-			imgElement.src = event.target.result;
-			$('#input').attr('src', event.target.result);
+	console.log(response);
 
-			imgElement.onload = function(e) {
-				const canvas = document.createElement("canvas");
-				const MAX_WIDTH = 200;
-
-				const scaleSize = MAX_WIDTH / e.target.width;
-				canvas.width = MAX_WIDTH;
-				canvas.height = e.target.height * scaleSize;
-
-				const ctx = canvas.getContext("2d");
-
-				ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
-				const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
-
-				file = srcEncoded;
-			}
-		}
-		let formData = new FormData();
-		formData.append("file", file);
-		let response = await fetch("/recipe/"+recipeId+"/upload", {
-			method: "POST",
-			body: formData
-		})
-	}
-
-	window.location.replace('/drinks/'+recipeId);
+	window.location.replace('/drinks');
 }
+
+// function uploadFile() {
+// 	alert('Starting method');
+// 	const file = document.querySelector('#fileupload').files[0];
+
+// 	const recipeId = $('#upload-button').html();
+
+// 	const WIDTH = 200;
+
+// 	if (file) {
+// 		alert('There is a file');
+// 		const reader = new FileReader();
+// 		reader.readAsDataURL(file);
+
+// 		reader.onload = function(event) {
+// 			alert('Event one');
+// 			const imgElement = document.createElement("img");
+// 			imgElement.src = event.target.result;
+
+// 			imgElement.onload = function(e) {
+// 				alert('Event 2');
+// 				const canvas = document.createElement("canvas");
+// 				const scaleSize = WIDTH / e.target.width;
+// 				canvas.width = WIDTH;
+// 				canvas.height = e.target.height * scaleSize;
+
+// 				const ctx = canvas.getContext("2d");
+
+// 				ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+// 				canvas.toBlob((blob) => {
+// 					alert('blob & post');
+// 					let formData = new FormData();
+// 					formData.append('file', blob, 'file.png');
+
+// 					$.ajax('/recipe/'+recipeId+'/upload', {
+// 						method: "POST",
+// 						contentType: 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
+// 						processData: false,
+// 						body: formData
+// 					}).done((data) => {
+// 						alert(data);
+// 					})
+// 				})
+// 			}
+// 		}
+// 	}
+// }
 
 $(function() {
 	// Add new Ingredients on click
