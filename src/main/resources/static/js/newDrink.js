@@ -1,3 +1,49 @@
+// File Upload
+async function uploadFile() {
+
+	var file = fileupload.files[0];
+
+	const recipeId = $('#upload-button').html();
+
+	if (file) {
+		console.log("FILE");
+		const reader = new FileReader();
+
+		reader.readAsDataURL(file);
+
+		reader.onload = function(event) {
+			const imgElement = document.createElement('img');
+			imgElement.src = event.target.result;
+			$('#input').attr('src', event.target.result);
+
+			imgElement.onload = function(e) {
+				const canvas = document.createElement("canvas");
+				const MAX_WIDTH = 200;
+
+				const scaleSize = MAX_WIDTH / e.target.width;
+				canvas.width = MAX_WIDTH;
+				canvas.height = e.target.height * scaleSize;
+
+				const ctx = canvas.getContext("2d");
+
+				ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+				const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
+
+				file = srcEncoded;
+			}
+		}
+		let formData = new FormData();
+		formData.append("file", file);
+		let response = await fetch("/recipe/"+recipeId+"/upload", {
+			method: "POST",
+			body: formData
+		})
+	}
+
+	window.location.replace('/drinks/'+recipeId);
+}
+
 $(function() {
 	// Add new Ingredients on click
 	$('#addIngredient').click(function() {
@@ -34,6 +80,10 @@ $(function() {
 				method: "POST",
 				contentType: 'application/json',
 				data: JSON.stringify(data)
-			});
+			})
+		.done(function(data) {
+			$('#upload-button').html(data);
+			$('#upload-button').trigger('click');
+		});
 	})
 });

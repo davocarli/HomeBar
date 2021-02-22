@@ -1,5 +1,6 @@
 package app.davocarli.homebar.controllers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import app.davocarli.homebar.models.Ingredient;
@@ -243,30 +247,74 @@ public class SiteController {
 	}
 	
 	@PostMapping("/drinks/new")
-	public String addDrink(HttpSession session, @RequestBody LinkedHashMap<String,Object> body) {
+	public ResponseEntity<?> addDrink(HttpSession session, @RequestBody LinkedHashMap<String,Object> body) {
+		Object userId = session.getAttribute("user");
+		try {
+			if (userId != null) {
+				Recipe recipe = new Recipe();
+				User user = userService.findById((Long)userId);
+				recipe.setName((String)body.get("name"));
+				recipe.setInstructions((String)body.get("instructions"));
+				recipe.setSource((String)body.get("source"));
+				recipe.setCreator(user);
+				recipe = recipeService.addRecipe(recipe);
+				ArrayList<Object> ingredientInfo = (ArrayList<Object>)body.get("ingredients");
+				for (int i = 0; i < ingredientInfo.size(); i++) {
+					LinkedHashMap<String, String> ingredient = (LinkedHashMap<String, String>)ingredientInfo.get(i);
+					if (ingredient.get("name").length() > 0) {
+						Ingredient newIngredient = new Ingredient();
+						newIngredient.setName(ingredient.get("name"));
+						newIngredient.setSubstituteNames(ingredient.get("substitutes"));
+						newIngredient.setAmount(ingredient.get("amount"));
+						newIngredient.setRecipe(recipe);
+						ingredientService.addIngredient(newIngredient);
+					}
+				}
+				return ResponseEntity.ok(recipe.getId());
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			
+		}
+	}
+	
+	private Optional<String> getExtensionByStringHandling(String filename) {
+	    return Optional.ofNullable(filename)
+	      .filter(f -> f.contains("."))
+	      .map(f -> f.substring(filename.lastIndexOf(".")));
+	}
+	
+	@PostMapping("/recipe/{id}/upload")
+	public ResponseEntity<?> recipeImageUpload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
+		String filename = file.getOriginalFilename();
+		
+		filename = id.toString() + getExtensionByStringHandling(filename).get();
+		try {
+			String uploadTo = "/recipeImages/" + filename;
+			String realPath = request.getServletContext().getRealPath(uploadTo);
+			file.transferTo( new File(realPath));
+			Recipe recipe = recipeService.getRecipe(id);
+			recipe.setImage(uploadTo);
+			recipeService.updateRecipe(recipe);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		return ResponseEntity.ok("File uploaded successfully.");
+	}
+	
+	@RequestMapping("/drinks/{id}")
+	public String drinkDetails(@PathVariable("id") Long id, HttpSession session, Model model) {
 		Object userId = session.getAttribute("user");
 		if (userId != null) {
-			Recipe recipe = new Recipe();
 			User user = userService.findById((Long)userId);
-			recipe.setName((String)body.get("name"));
-			recipe.setInstructions((String)body.get("instructions"));
-			recipe.setSource((String)body.get("source"));
-			recipe.setCreator(user);
-			recipe = recipeService.addRecipe(recipe);
-			List<Ingredient> ingredients = new ArrayList<Ingredient>();
-			ArrayList<Object> ingredientInfo = (ArrayList<Object>)body.get("ingredients");
-			for (int i = 0; i < ingredientInfo.size(); i++) {
-				Ingredient newIngredient = new Ingredient();
-				LinkedHashMap<String, String> ingredient = (LinkedHashMap<String, String>)ingredientInfo.get(i);
-				newIngredient.setName(ingredient.get("name"));
-				newIngredient.setSubstituteNames(ingredient.get("substitutes"));
-				newIngredient.setAmount(ingredient.get("amount"));
-				newIngredient.setRecipe(recipe);
-				ingredientService.addIngredient(newIngredient);
-			}
+			model.addAttribute("user", user);
+			Recipe recipe = recipeService.getRecipe(id);
+			model.addAttribute("recipe", recipe);
+			return "drinkDetails.jsp";
 		} else {
 			return "redirect:/";
 		}
-		return "redirect:/";
 	}
 }

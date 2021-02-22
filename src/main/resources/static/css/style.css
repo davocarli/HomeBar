@@ -35,3 +35,6 @@
 	background-color: #1e87f0!important;
 	color: #fff!important;
 }
+#upload-button {
+	display: none;
+}

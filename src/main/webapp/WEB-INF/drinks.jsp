@@ -63,9 +63,11 @@
 				<c:forEach items="${ drinks }" var="drink">
 					<li class="drink-card" data-ingredients="|${ drink.getAllFullIngredients().toUpperCase() }|">
 						<div class="uk-card uk-card-default">
-							<div class="uk-card-media-top">
-								<img src="/img/cocktail.png" alt="cocktail">
-							</div>
+							<c:if test="${ drink.image.length() > 0 }">
+								<div class="uk-card-media-top">
+									<img src="${ drink.image }" alt="cocktail">
+								</div>
+							</c:if>
 							<div class="uk-card-body">
 								<a class="uk-link-text" href="/drinks/${ drink.id }"><h3 class="uk-card-title">${ drink.name }</h3></a>
 								<a class="uk-link-text" href="/drinks/${ drink.id }"><p>${ drink.ingredientList }</p></a>

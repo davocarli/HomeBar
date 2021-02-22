@@ -4,8 +4,6 @@ function anyCommon(arr1, arr2) {
 
 $(function() {
 
-	// $('.drink-filter-disable').hide();
-
 	var filterArrays = [];
 
 	$('.drink-filter:not(.drink-filter-disable)').each(function() {
@@ -16,7 +14,6 @@ $(function() {
 	$('.drink-card').each(function() {
 		var card = $(this);
 		var ingredients = card.attr('data-ingredients').split('\n').filter(function(el) {return el.replaceAll('|', '').length != 0});
-		console.log(ingredients);
 
 		var filters = '';
 
@@ -45,9 +42,5 @@ $(function() {
 	$('.drink-filter').click(function() {
 		let group = $(this).attr('data-filter-group');
 		$('.drink-filter.' + group).toggle();
-		// $('.drink-filter-disable.' + group).addClass('uk-active');
-
-		// let selector = $('.drink-filter.' + $(this).attr('data-filter-group'));
-		// $(selector).toggle().toggleClass('uk-active');
 	})
 });
