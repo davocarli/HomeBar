@@ -61,3 +61,4 @@ hs_err_pid*
 
 # recipeImages
 /src/main/webapp/recipeImages/*
+!/src/main/webapp/recipeImages/.gitkeep
