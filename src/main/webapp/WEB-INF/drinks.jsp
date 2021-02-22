@@ -66,7 +66,7 @@
 						<div class="uk-card uk-card-default">
 							<c:if test="${ drink.image.length() > 0 }">
 								<div class="uk-card-media-top">
-									<img src="${ drink.image }" alt="cocktail">
+									<img src="${ drink.image }" alt="cocktail" onerror="this.parentElement.style.display='none'">
 								</div>
 							</c:if>
 							<div class="uk-card-body">

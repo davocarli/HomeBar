@@ -283,7 +283,7 @@ public class SiteController {
 		}
 	}
 	
-	@PostMapping("/drkns/{id}/edit")
+	@PostMapping("/drinks/{id}/edit")
 	public ResponseEntity<?> updateDrink(@PathVariable("id") Long id, HttpSession session, @RequestBody LinkedHashMap<String, Object> body) {
 		Object userId = session.getAttribute("user");
 		try {
@@ -299,7 +299,12 @@ public class SiteController {
 					}
 					recipe.setSource((String)body.get("source"));
 					recipe.setInstructions((String)body.get("instructions"));
+					recipe = recipeService.updateRecipe(recipe);
 					ArrayList<Object> ingredientInfo = (ArrayList<Object>)body.get("ingredients");
+					List<Ingredient> oldIngredients = recipe.getIngredients();
+					for (int i = oldIngredients.size()-1; i >= 0; i--) {
+						ingredientService.deleteIngredient(oldIngredients.get(i));
+					}
 					for (int i = 0; i < ingredientInfo.size(); i++) {
 						LinkedHashMap<String, String> ingredient = (LinkedHashMap<String, String>)ingredientInfo.get(i);
 						if (ingredient.get("name").length() > 0) {
@@ -311,13 +316,9 @@ public class SiteController {
 							ingredientService.addIngredient(newIngredient);
 						}
 					}
-					List<Ingredient> oldIngredients = recipe.getIngredients();
-					for (int i = oldIngredients.size()-1; i >= 0; i--) {
-						ingredientService.deleteIngredient(oldIngredients.get(i));
-					}
-					recipe = recipeService.updateRecipe(recipe);
 					return ResponseEntity.ok(recipe.getId());
 				} else {
+					System.out.println("User doesn't match");
 					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 				}
 			}
