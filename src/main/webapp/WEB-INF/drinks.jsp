@@ -47,6 +47,7 @@
 						<ul class="uk-subnav uk-subnav-pill" uk-margin>
 							<li id="filter-reset" uk-filter-control="group: make"><a href="#">All Drinks</a></li>
 							<li uk-filter-control="filter: [data-can-make='true']; group: make"><a href="#">Drinks I Can Make</a></li>
+							<li uk-filter-control="filter: [data-creator='${ user.username }']; group: make"><a href="#">My Drinks</a></li>
 						</ul>
 					</div>
 					<!--TODO: Dynamic filters based on ingredients -->
@@ -61,7 +62,7 @@
 				</div>
 			<ul class="js-filter uk-child-width-1-5 uk-child-width-1-5@m uk-text-center" uk-grid="masonry: true">
 				<c:forEach items="${ drinks }" var="drink">
-					<li class="drink-card" data-ingredients="|${ drink.getAllFullIngredients().toUpperCase() }|">
+					<li class="drink-card" data-creator="${ drink.creator.username }" data-ingredients="|${ drink.getAllFullIngredients().toUpperCase() }|">
 						<div class="uk-card uk-card-default">
 							<c:if test="${ drink.image.length() > 0 }">
 								<div class="uk-card-media-top">

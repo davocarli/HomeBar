@@ -6,6 +6,8 @@
 	border: none;
 	min-height: 0px;
 	padding-bottom: 0px;
+	padding: 0px!important;
+	vertical-align: middle;
 }
 .selectize-input.focus {
 	border: none;

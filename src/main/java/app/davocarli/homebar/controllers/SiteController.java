@@ -136,7 +136,7 @@ public class SiteController {
 			String stockString = user.getFullStock();
 			List<Recipe> recipes = recipeService.getAll();
 			model.addAttribute("drinks", recipes);
-			
+			model.addAttribute("user", user);
 			List<Ingredient> unclassified = user.getIngredients();
 			ArrayList<ArrayList<Ingredient>> classified = classifyIngredients(unclassified);
 			ArrayList<Ingredient> stockedIngredients = classified.get(0);
@@ -254,6 +254,9 @@ public class SiteController {
 				Recipe recipe = new Recipe();
 				User user = userService.findById((Long)userId);
 				recipe.setName((String)body.get("name"));
+				if (recipe.getName().length() == 0) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				}
 				recipe.setInstructions((String)body.get("instructions"));
 				recipe.setSource((String)body.get("source"));
 				recipe.setCreator(user);
@@ -277,6 +280,49 @@ public class SiteController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			
+		}
+	}
+	
+	@PostMapping("/drkns/{id}/edit")
+	public ResponseEntity<?> updateDrink(@PathVariable("id") Long id, HttpSession session, @RequestBody LinkedHashMap<String, Object> body) {
+		Object userId = session.getAttribute("user");
+		try {
+			if (userId == null) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			} else {
+				Recipe recipe = recipeService.getRecipe(id);
+				User user = userService.findById(((Long)userId));
+				if (user.getId().equals(recipe.getCreator().getId())) {
+					String name = (String)body.get("name");
+					if (name.length() > 0) {
+						recipe.setName(name);
+					}
+					recipe.setSource((String)body.get("source"));
+					recipe.setInstructions((String)body.get("instructions"));
+					ArrayList<Object> ingredientInfo = (ArrayList<Object>)body.get("ingredients");
+					for (int i = 0; i < ingredientInfo.size(); i++) {
+						LinkedHashMap<String, String> ingredient = (LinkedHashMap<String, String>)ingredientInfo.get(i);
+						if (ingredient.get("name").length() > 0) {
+							Ingredient newIngredient = new Ingredient();
+							newIngredient.setName(ingredient.get("name"));
+							newIngredient.setSubstituteNames(ingredient.get("substitutes"));
+							newIngredient.setAmount(ingredient.get("amount"));
+							newIngredient.setRecipe(recipe);
+							ingredientService.addIngredient(newIngredient);
+						}
+					}
+					List<Ingredient> oldIngredients = recipe.getIngredients();
+					for (int i = oldIngredients.size()-1; i >= 0; i--) {
+						ingredientService.deleteIngredient(oldIngredients.get(i));
+					}
+					recipe = recipeService.updateRecipe(recipe);
+					return ResponseEntity.ok(recipe.getId());
+				} else {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				}
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 	
@@ -316,5 +362,70 @@ public class SiteController {
 		} else {
 			return "redirect:/";
 		}
+	}
+	
+	@RequestMapping("/drinks/{id}/edit")
+	public String editDrink(@PathVariable("id") Long id, HttpSession session, Model model) {
+		Object userId = session.getAttribute("user");
+		Recipe recipe = recipeService.getRecipe(id);
+		if (userId != null && recipe.getCreator().getId().equals((Long)userId)) {
+			model.addAttribute("recipe", recipe);
+			return "editDrink.jsp";
+		} else {
+			return "redirect:/";
+		}
+	}
+	
+	@RequestMapping("/ingredients/{id}/edit")
+	public String editIngredient(@PathVariable("id") Long id, HttpSession session, Model model) {
+		Object userId = session.getAttribute("user");
+		if (userId != null) {
+			User user = userService.findById((Long) userId);
+			Ingredient ingredient = ingredientService.getIngredient(id);
+			if (ingredient.getUser().getId() != user.getId()) {
+				if (ingredient.getStatus().equals("stock")) {
+					return "redirect:/bar";
+				} else {
+					return "redirect:/shopping";
+				}
+			} else {
+				model.addAttribute("ingredient", ingredient);
+				return "editIngredient.jsp";
+			}
+		} else {
+			return "redirect:/";
+		}
+	}
+	
+	@PostMapping("/ingredients/{id}/edit")
+	public String updateIngredient(@ModelAttribute Ingredient ingredient, @PathVariable("id") Long id, HttpSession session, Model model) {
+		Object userId = session.getAttribute("user");
+		Ingredient currentIngredient = ingredientService.getIngredient(id);
+		if (userId == null || ingredient.getName().equals("") || !currentIngredient.getUser().getId().equals((Long)userId)) {
+			return "redirect:/ingredients/" + ingredient.getId().toString() + "/edit";
+		} else {
+			currentIngredient.setName(ingredient.getName());
+			currentIngredient.setSubstituteNames(ingredient.getSubstituteNames());
+			ingredientService.updateIngredient(currentIngredient);
+			if (currentIngredient.getStatus().equals("stock")) {
+				return "redirect:/bar";
+			} else {
+				return "redirect:/shopping";
+			}
+		}
+	}
+	
+	@RequestMapping("/drinks/{id}/delete")
+	public String deleteDrink(@PathVariable("id") Long id, HttpSession session) {
+		Long userId = (Long)session.getAttribute("user");
+		Recipe recipe = recipeService.getRecipe(id);
+		if (userId.equals(recipe.getCreator().getId())) {
+			List<Ingredient> ingredients = recipe.getIngredients();
+			for (int i = ingredients.size()-1; i >= 0; i--) {
+				ingredientService.deleteIngredient(ingredients.get(i));
+			}
+			recipeService.deleteRecipe(recipe);
+		}
+		return "redirect:/drinks";
 	}
 }

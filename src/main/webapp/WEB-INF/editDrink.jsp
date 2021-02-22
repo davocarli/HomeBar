@@ -40,25 +40,28 @@
 		</nav>
 		<!-- CONTENT -->
 		<div style="padding: 50px;">
-			<h3>Submit a new recipe</h3>
-			<button id="upload-button" onclick="uploadFile()">UPLOAD</button>
-			<form>
+			<h3 style="display: inline-block;">Edit Recipe</h3>
+			<button id="upload-button" onclick="uploadFile()">${ recipe.id }</button>
+			<form:form modelAttribute="recipe">
 				<fieldset class="uk-fieldset">
-					<input class="uk-input uk-form-width-large" type="text" id="name" placeholder="Recipe Name"/>
+					<form:input class="uk-input uk-form-width-large" type="text" path="name" id="name" placeholder="Recipe Name"/>
 					<div uk-form-custom="target: true">
 						<input type="file" id="fileupload" name="fileupload" accept="image/*">
-						<input class="uk-input uk-form-width-large" type="text" placeholder="Upload Image" disabled>
+						<input class="uk-input uk-form-width-large" type="text" placeholder="Replace/Upload Image" disabled>
 					</div>
 				</fieldset>
 				<div id="ingredients">
+				<c:forEach items="${ recipe.ingredients }" var="ingredient">
+					<fieldset class="uk-fieldset ingredient-list"><input class="uk-input uk-form-width-large ingredient" type="text" placeholder="Preferred Ingredient" value="${ ingredient.name }"/><input class="uk-input uk-form-width-large selectize-init" multiple="multiple" placeholder="Acceptable substitutes..." value="${ ingredient.substituteNames }"/><input class="uk-input uk-form-width-small amount" placeholder="Amount" value="${ ingredient.amount }"/></fieldset>
+				</c:forEach>
 				</div>
 				<a id="addIngredient">Add Ingredient</a>
 				<fieldset class="uk-fieldset">
-					<textarea class="uk-textarea uk-form-width-large" id="instructions" placeholder="Drink Instructions..." rows="10" style="width: 1134px;"></textarea>
-					<input class="uk-input" type="text" id="source" placeholder="Source (Give credit if this is not your own recipe)." style="width: 1134px; margin-top: 10px;"/>
+					<form:textarea class="uk-textarea uk-form-width-large" id="instructions" path="instructions" placeholder="Drink Instructions..." rows="10" style="width: 1134px;"></form:textarea>
+					<form:input class="uk-input" type="text" id="source" path="source" placeholder="Source (Give credit if this is not your own recipe)." style="width: 1134px; margin-top: 10px;"/>
 				</fieldset>
-			</form>
-			<button class="uk-button uk-button-primary" id="submit">SUBMIT</button>
+			</form:form>
+			<button class="uk-button uk-button-primary" id="submit">SUBMIT</button> <a class="uk-button uk-button-danger" href="/drinks/${ recipe.id }/delete">DELETE DRINK</a>
 		</div>
 	</body>
 </html>

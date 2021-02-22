@@ -48,40 +48,18 @@
 		</nav>
 		<!-- CONTENT -->
 		<div style="padding: 50px">
-			<h3>Add a new ingredient to your bar</h3>
-			<form:form method="POST" action="/bar/add" modelAttribute="ingredient">
+			<h3>Edit ingredient</h3>
+			<form:form method="POST" action="/ingredients/${ ingredient.id }/edit" modelAttribute="ingredient">
 				<span class="uk-text-danger">${ formErrors }</span>
 				<fieldset class="uk-fieldset">
 					<div class="uk-inline uk-width-2-2">
 						<form:input class="uk-input uk-form-width-large" path="name" placeholder="Ingredient Name"/>
 						<form:input class="uk-input uk-form-width-large selectize" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
-						<input class="uk-button uk-inline uk-button-primary" type="submit" value="ADD"/>
+						<input class="uk-button uk-inline uk-button-primary" type="submit" value="UPDATE"/>
 						<!--TODO: DYNAMICALLY ADD SUGGESTED OPTIONS BASED ON OTHER INGREDIENTS IN DATABASE -->
 					</div>
 				</fieldset>
 			</form:form>
-		</div>
-		<div style="padding: 50px">
-			<table class="uk-table">
-				<caption><h3>Your Bar</h3></caption>
-				<thead>
-					<tr>
-						<th>Ingredient</th>
-						<th>Substitutes</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${ ingredients }" var="ingredient">
-						<tr>
-							<td>${ ingredient.name }</td>
-							<td>${ ingredient.substituteNames.replace('|', ', ') } <a class="uk-link-text uk-text-small" href="/ingredients/${ ingredient.id }/edit">(edit)</a></td>
-							<!--TODO: Add ability to edit existing item -->
-							<td><a class="uk-link-text" href="/ingredients/${ ingredient.id }/remove">Remove</a>, <a class="uk-link-text" href="/shopping/${ ingredient.id }/add">Move to Shopping List</a></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
 		</div>
 	</body>
 </html>

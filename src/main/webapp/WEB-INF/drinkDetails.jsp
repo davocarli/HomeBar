@@ -40,7 +40,9 @@
 		</nav>
 		<!-- CONTENT -->
 		<div style="padding: 50px;">
-			<h2>${ recipe.name }</h2>
+			<div>
+				<h2 style="display: inline-block;">${ recipe.name }</h2><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
+			</div>
 			<div class="uk-text-top" style="width: 49%; display: inline-block;">
 			<h3>Ingredients</h3>
 			<ul>

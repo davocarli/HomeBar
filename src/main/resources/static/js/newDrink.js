@@ -123,7 +123,13 @@ $(function() {
 			instructions: $('#instructions').val(),
 			source: $('#source').val()
 		}
-		$.ajax('/drinks/new',
+		var url = null;
+		if ($('#upload-button').html() == 'UPLOAD') {
+			url = '/drinks/new';
+		} else {
+			url = '/drinks/' + $('#upload-button').html() + "/edit";
+		}
+		$.ajax(url,
 			{
 				method: "POST",
 				contentType: 'application/json',
