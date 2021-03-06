@@ -29,38 +29,56 @@
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
 				<div class="uk-navbar-center-right">
 					<ul class="uk-navbar-nav">
-						<li class="uk-active"><a href="/drinks">Make a Drink</a></li>
+						<li class="uk-active"><a href="/">Make a Drink</a></li>
 						<li><a href="/drinks/new">Add a Drink</a></li>
 					</ul>
 				</div>
 			</div>
 			<div class="uk-navbar-right">
-				<a href="/profile" class="uk-button uk-button-default">Profile</a>
+				<c:if test="${ user != null }"><a href="/profile" class="uk-button uk-button-default">Profile</a></c:if><c:if test="${ user == null }"><a href="/login" class="uk-button uk-button-default">LOG IN</a></c:if>
 			</div>
 		</nav>
 		<!-- CONTENT -->
 		<div style="padding: 50px;">
-			<div>
-				<h2 style="display: inline-block;">${ recipe.name }</h2><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
-			</div>
-			<div class="uk-text-top" style="width: 49%; display: inline-block;">
-			<h3>Ingredients</h3>
-			<ul>
-				<c:forEach items="${ recipe.ingredients }" var="ingredient">
-					<li>${ ingredient.name } (${ ingredient.amount })</li>
-				</c:forEach>
-			</ul>
-			<c:if test="${ recipe.image.length() == 0 || recipe.image == null }"></div><div style="width: 49%; display: inline-block;"></c:if>
-			<h3>Instructions</h3>
-			<p style="white-space: pre-line">${ recipe.instructions }
-				<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if>
-			</p>
-			</div>
-			<c:if test="${ recipe.image.length() > 0 }">
-				<div style="width: 49%; display: inline-block;">
-					<img src="${ recipe.image }" alt="cocktail">
-				</div>
-			</c:if>
+			<c:choose>
+				<c:when test="${ recipe.image.length() > 0 }">	
+					<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+					    <div class="uk-flex-last@s uk-card-media-right uk-cover-container drink-detail-image">
+					        <img class="uk-cover-container" uk-cover src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/1000/${ recipe.image }" alt="cocktail" onerror="this.style.display='none'">
+					    </div>
+					    <div>
+					        <div class="uk-card-body">
+					            <h3 style="display: inline-block;" class="uk-card-title">${ recipe.name }</h3><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
+					            <h4>Ingredients</h4>
+					            <ul>
+					            	<c:forEach items="${ recipe.ingredients }" var="ingredient">
+					            		<li>${ ingredient.name } (${ ingredient.amount })</li>
+					            	</c:forEach>
+					            </ul>
+					            <h4>Method</h4>
+					            <p style="white-space: pre-line;">${ recipe.instructions }<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if></p>
+					        </div>
+					    </div>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div style="padding: 20px;" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+			            <h3 style="display: inline-block;" class="uk-card-title">${ recipe.name }</h3><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
+			            <div>
+			            	<h4>Ingredients</h4>
+			            	<ul>
+			            		<c:forEach items="${ recipe.ingredients }" var="ingredient">
+			            			<li>${ ingredient.name } (${ ingredient.amount })</li>
+			            		</c:forEach>
+			            	</ul>
+			            </div>
+			            <div>
+			            	<h4>Method</h4>
+			            	<p style="white-space: pre-line;">${ recipe.instructions }<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if></p>
+			            </div>
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</body>
 </html>

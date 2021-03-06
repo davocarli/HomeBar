@@ -37,7 +37,7 @@
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
 				<div class="uk-navbar-center-right">
 					<ul class="uk-navbar-nav">
-						<li><a href="/drinks">Make a Drink</a></li>
+						<li><a href="/">Make a Drink</a></li>
 						<li><a href="/drinks/new">Add a Drink</a></li>
 					</ul>
 				</div>
@@ -62,13 +62,13 @@
 			</form:form>
 		</div>
 		<div style="padding: 50px">
-			<table class="uk-table">
+			<table class="uk-table uk-table-hover uk-table-divider uk-table-responsive">
 				<caption><h3>Your Shopping List</h3></caption>
 				<thead>
 					<tr>
-						<th>Ingredient</th>
+						<th class="uk-table-expand">Ingredient</th>
 <!-- 						<th>Substitutes</th> -->
-						<th>Actions</th>
+						<th class="uk-width-small">Actions</th>
 					</tr>
 				</thead>
 				<tbody>

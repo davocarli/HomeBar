@@ -37,7 +37,7 @@
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
 				<div class="uk-navbar-center-right">
 					<ul class="uk-navbar-nav">
-						<li><a href="/drinks">Make a Drink</a></li>
+						<li><a href="/">Make a Drink</a></li>
 						<li><a href="/drinks/new">Add a Drink</a></li>
 					</ul>
 				</div>
@@ -62,20 +62,20 @@
 			</form:form>
 		</div>
 		<div style="padding: 50px">
-			<table class="uk-table">
+			<table class="uk-table uk-table-hover uk-table-divider uk-table-responsive">
 				<caption><h3>Your Bar</h3></caption>
 				<thead>
 					<tr>
-						<th>Ingredient</th>
-						<th>Substitutes</th>
-						<th>Actions</th>
+						<th class="uk-width-medium">Ingredient</th>
+						<th class="uk-table-expand">Substitutes</th>
+						<th class="uk-width-medium">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${ ingredients }" var="ingredient">
 						<tr>
-							<td>${ ingredient.name }</td>
-							<td>${ ingredient.substituteNames.replace('|', ', ') } <a class="uk-link-text uk-text-small" href="/ingredients/${ ingredient.id }/edit">(edit)</a></td>
+							<td class="uk-table-link"><a class="uk-link-reset" href="/ingredients/${ingredient.id }/edit">${ ingredient.name }</a></td>
+							<td class="uk-table-link"><a class="uk-link-reset" href="/ingredients/${ ingredient.id }/edit">${ ingredient.substituteNames.replace('|', ', ') }</a></td>
 							<!--TODO: Add ability to edit existing item -->
 							<td><a class="uk-link-text" href="/ingredients/${ ingredient.id }/remove">Remove</a>, <a class="uk-link-text" href="/shopping/${ ingredient.id }/add">Move to Shopping List</a></td>
 						</tr>

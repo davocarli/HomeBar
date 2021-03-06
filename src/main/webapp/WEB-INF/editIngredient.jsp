@@ -37,7 +37,7 @@
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
 				<div class="uk-navbar-center-right">
 					<ul class="uk-navbar-nav">
-						<li><a href="/drinks">Make a Drink</a></li>
+						<li><a href="/">Make a Drink</a></li>
 						<li><a href="/drinks/new">Add a Drink</a></li>
 					</ul>
 				</div>

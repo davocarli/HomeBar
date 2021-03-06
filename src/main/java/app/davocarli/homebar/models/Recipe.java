@@ -38,7 +38,7 @@ public class Recipe {
 	private Date createdAt;
 	private Date updatedAt;
 	
-	@Column(nullable=true, length=64)
+	@Column(nullable=true, length=100)
 	private String image;
 	
 	@OneToMany(mappedBy="recipe", fetch=FetchType.LAZY)

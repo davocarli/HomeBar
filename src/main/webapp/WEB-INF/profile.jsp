@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
-	<script src="/js/newDrink.js"></script>
+	<script src="/js/drinkList.js"></script>
 	</head>
 	<body>
 		<!-- NAVBAR -->
@@ -29,36 +29,24 @@
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
 				<div class="uk-navbar-center-right">
 					<ul class="uk-navbar-nav">
-						<li><a href="/">Make a Drink</a></li>
-						<li class="uk-active"><a href="/drinks/new">Add a Drink</a></li>
+						<li class="uk-active"><a href="/">Make a Drink</a></li>
+						<li><a href="/drinks/new">Add a Drink</a></li>
 					</ul>
 				</div>
 			</div>
 			<div class="uk-navbar-right">
-				<a href="/profile" class="uk-button uk-button-default">Profile</a>
+				<c:if test="${ user != null }"><a href="/profile" class="uk-button uk-button-default">Profile</a></c:if><c:if test="${ user == null }"><a href="/login" class="uk-button uk-button-default">LOG IN</a></c:if>
 			</div>
 		</nav>
 		<!-- CONTENT -->
 		<div style="padding: 50px;">
-			<h3>Submit a new recipe</h3>
-			<button id="upload-button" onclick="uploadFile()">UPLOAD</button>
-			<form>
-				<fieldset class="uk-fieldset">
-					<input class="uk-input uk-form-width-large" type="text" id="name" placeholder="Recipe Name"/>
-					<div uk-form-custom="target: true">
-						<input type="file" id="fileupload" name="fileupload" accept="image/*">
-						<input class="uk-input uk-form-width-large" type="text" placeholder="Upload Image" disabled>
-					</div>
-				</fieldset>
-				<div id="ingredients">
-				</div>
-				<a id="addIngredient">Add Ingredient</a>
-				<fieldset class="uk-fieldset">
-					<textarea class="uk-textarea uk-form-width-large" id="instructions" placeholder="Drink Instructions..." rows="10" style="width: 1134px;"></textarea>
-					<input class="uk-input" type="text" id="source" placeholder="Source (Give credit if this is not your own recipe)." style="width: 1134px; margin-top: 10px;"/>
-				</fieldset>
-			</form>
-			<button class="uk-button uk-button-primary" id="submit">SUBMIT</button>
+			<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+			    <div>
+			        <div class="uk-card-body">
+						<h3>Profile Page Coming Soon</h3>
+			        </div>
+			    </div>
+			</div>
 		</div>
 	</body>
 </html>

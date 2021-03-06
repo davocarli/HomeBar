@@ -1,6 +1,5 @@
 package app.davocarli.homebar.controllers;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import app.davocarli.homebar.models.Ingredient;
 import app.davocarli.homebar.models.Recipe;
@@ -84,7 +93,7 @@ public class SiteController {
 	   return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
 	}
 	
-	@RequestMapping("/")
+	@RequestMapping("/login")
 	public String loginPage(@ModelAttribute("user") User user, HttpSession session, Model model) {
 		Object userId = session.getAttribute("user");
 		if (userId != null) {
@@ -121,31 +130,36 @@ public class SiteController {
 		User user = userService.authenticate(email, password);
 		if (user == null) {
 			attrs.addFlashAttribute("loginErrors", "Invalid username and password.");
-			return "redirect:/";
+			return "redirect:/login";
 		} else {
 			session.setAttribute("user", user.getId());
-			return "redirect:/drinks";
+			return "redirect:/";
 		}
 	}
 	
-	@RequestMapping("/drinks")
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
+	
+	
+	@RequestMapping("/")
 	public String drinksList(HttpSession session, Model model) {
 		Object userId = session.getAttribute("user");
+		List<Recipe> recipes = recipeService.getAll();
+		model.addAttribute("drinks", recipes);
 		if (userId != null) {
 			User user = userService.findById((Long)userId);
 			String stockString = user.getFullStock();
-			List<Recipe> recipes = recipeService.getAll();
-			model.addAttribute("drinks", recipes);
 			model.addAttribute("user", user);
 			List<Ingredient> unclassified = user.getIngredients();
 			ArrayList<ArrayList<Ingredient>> classified = classifyIngredients(unclassified);
 			ArrayList<Ingredient> stockedIngredients = classified.get(0);
 			model.addAttribute("fullStock", stockString);
 			model.addAttribute("stockedIngredients", stockedIngredients);
-			return "drinks.jsp";
-		} else {
-			return "redirect:/";
 		}
+		return "drinks.jsp";
 	}
 	
 	@RequestMapping("/bar")
@@ -159,7 +173,7 @@ public class SiteController {
 			model.addAttribute("ingredients", stockedIngredients);
 			return "bar.jsp";
 		} else {
-			return "redirect:/";
+			return "redirect:/login";
 		}
 	}
 	
@@ -208,7 +222,7 @@ public class SiteController {
 			model.addAttribute("ingredients", shoppingIngredients);
 			return "shopping.jsp";
 		} else {
-			return "redirect:/";
+			return "redirect:/login";
 		}
 	}
 	
@@ -242,7 +256,7 @@ public class SiteController {
 		if (userId != null) {
 			return "newDrink.jsp";
 		} else {
-			return "redirect:/";
+			return "redirect:/login";
 		}
 	}
 	
@@ -278,6 +292,7 @@ public class SiteController {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			
 		}
@@ -318,11 +333,11 @@ public class SiteController {
 					}
 					return ResponseEntity.ok(recipe.getId());
 				} else {
-					System.out.println("User doesn't match");
 					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 				}
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -333,19 +348,56 @@ public class SiteController {
 	      .map(f -> f.substring(filename.lastIndexOf(".")));
 	}
 	
-	@PostMapping("/recipe/{id}/upload")
-	public ResponseEntity<?> recipeImageUpload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
-		String filename = file.getOriginalFilename();
+	@RequestMapping("/buckets")
+	public String bucketTest() {
+		AWSCredentials credentials = new BasicAWSCredentials(
+				"AKIAJAEORFIVGXIWLWRA",
+				"Y7mhI+8xokMJfYfYEUMdHIUHP9GGR9BbG7uVCLTR"
+		);
+		AmazonS3 s3client = AmazonS3ClientBuilder
+				.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(credentials))
+				.withRegion(Regions.US_WEST_2)
+				.build();
 		
-		filename = id.toString() + getExtensionByStringHandling(filename).get();
+		List<Bucket> buckets = s3client.listBuckets();
+		for(Bucket bucket : buckets) {
+			System.out.println(bucket);
+			System.out.println(bucket.getName());
+		}
+		return "redirect:/";
+	}
+	
+	@PostMapping("/recipe/{id}/upload")
+	public ResponseEntity<?> recipeImageUpload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, HttpServletRequest request) {		
+		AWSCredentials credentials = new BasicAWSCredentials(
+				"AKIAJAEORFIVGXIWLWRA",
+				"Y7mhI+8xokMJfYfYEUMdHIUHP9GGR9BbG7uVCLTR"
+		);
+		AmazonS3 s3client = AmazonS3ClientBuilder
+				.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(credentials))
+				.withRegion(Regions.US_WEST_2)
+				.build();
+		System.out.println("Created Client");
 		try {
-			String uploadTo = "/recipeImages/" + filename;
-			String realPath = request.getServletContext().getRealPath(uploadTo);
-			file.transferTo( new File(realPath));
+			String filename = file.getOriginalFilename();
+			String fileExtension = getExtensionByStringHandling(filename).get();
+			filename = "recipe" + id.toString() + fileExtension;
+			ObjectMetadata metadata = new ObjectMetadata();
+			metadata.setContentLength(file.getSize());
+			PutObjectRequest putRequest = new PutObjectRequest(
+					"home-bar.app",
+					"recipeImages/fullSize/" + filename,
+					file.getInputStream(),
+					metadata
+			);
+			s3client.putObject(putRequest);
 			Recipe recipe = recipeService.getRecipe(id);
-			recipe.setImage(uploadTo);
+			recipe.setImage(filename);
 			recipeService.updateRecipe(recipe);
 		} catch (Exception e) {
+			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		return ResponseEntity.ok("File uploaded successfully.");
@@ -357,12 +409,10 @@ public class SiteController {
 		if (userId != null) {
 			User user = userService.findById((Long)userId);
 			model.addAttribute("user", user);
-			Recipe recipe = recipeService.getRecipe(id);
-			model.addAttribute("recipe", recipe);
-			return "drinkDetails.jsp";
-		} else {
-			return "redirect:/";
 		}
+		Recipe recipe = recipeService.getRecipe(id);
+		model.addAttribute("recipe", recipe);
+		return "drinkDetails.jsp";
 	}
 	
 	@RequestMapping("/drinks/{id}/edit")
@@ -373,7 +423,7 @@ public class SiteController {
 			model.addAttribute("recipe", recipe);
 			return "editDrink.jsp";
 		} else {
-			return "redirect:/";
+			return "redirect:/login";
 		}
 	}
 	
@@ -394,7 +444,7 @@ public class SiteController {
 				return "editIngredient.jsp";
 			}
 		} else {
-			return "redirect:/";
+			return "redirect:/login";
 		}
 	}
 	
@@ -427,6 +477,27 @@ public class SiteController {
 			}
 			recipeService.deleteRecipe(recipe);
 		}
-		return "redirect:/drinks";
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/profile")
+	public String myProfile(HttpSession session) {
+		Object userId = session.getAttribute("user");
+		if (!userId.equals(null)) {
+			return "redirect:/profile/" + userId.toString();
+		}
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/profile/{id}")
+	public String getProfile(@PathVariable("id") Long id, HttpSession session, Model model) {
+		Object userId = session.getAttribute("user");
+		if (!userId.equals(null)) {
+			User currentUser = userService.findById((Long)userId);
+			model.addAttribute("user", currentUser);
+		}
+		User profileUser = userService.findById(id);
+		model.addAttribute("profile", profileUser);
+		return "profile.jsp";
 	}
 }

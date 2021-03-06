@@ -41,6 +41,6 @@ $(function() {
 
 	$('.drink-filter').click(function() {
 		let group = $(this).attr('data-filter-group');
-		$('.drink-filter.' + group).toggle();
+		$('.drink-filter.' + group).toggleClass('filter-visible');
 	})
 });

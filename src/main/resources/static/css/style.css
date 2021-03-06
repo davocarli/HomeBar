@@ -40,3 +40,67 @@
 #upload-button {
 	display: none;
 }
+.cocktail-image {
+	border-radius: 10px;
+}
+.home-image-div {
+	min-height: 200px;
+	max-height: 200px;
+	overflow: hidden;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.home-image {
+	opacity: 0%;
+}
+.home-list {
+	padding: 20px 20px;
+	background-color: #F8F8F8;
+}
+body {
+	background-color: #F8F8F8;
+	height: 100vh;
+}
+.uk-card-title {
+	margin-top: 10px;
+}
+caption h3 {
+	width: 200px;
+}
+.uk-card {
+	overflow-wrap: break-word;
+}
+.home-card-footer {
+	padding: 10px;
+}
+.drink-detail-image {
+	max-height: 85vh;
+}
+ul.filter-menu, div.filter-menu {
+	flex-wrap: nowrap;
+	white-space: nowrap;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	display: inline-block;
+}
+li.filter-menu {
+	display: none;
+	padding-left: 10px;
+}
+li.filter-visible {
+	display: inline-block;
+}
+li.filter-divider {
+	display: inline-block;
+	opacity: 40%;
+	margin-right: -10px;
+	padding: 0px;
+}
+.link-card-body:hover {
+	text-decoration: none;
+}
+.card-text {
+	display: block;
+	margin-top: 10px;
+}

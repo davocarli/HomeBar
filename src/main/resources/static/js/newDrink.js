@@ -30,18 +30,19 @@ async function uploadFile() {
 	const file = document.querySelector('#fileupload').files[0];
 
 	const recipeId = $('#upload-button').html();
+	
+	if (file) {
+	
+		let formData = new FormData();
+		formData.append("file", file);
+	
+		let response = await fetch("/recipe/" + recipeId + "/upload", {
+			method: "POST",
+			body: formData
+		})
+	}
 
-	let formData = new FormData();
-	formData.append("file", file);
-
-	let response = await fetch("/recipe/" + recipeId + "/upload", {
-		method: "POST",
-		body: formData
-	})
-
-	console.log(response);
-
-	window.location.replace('/drinks');
+	window.location.replace('/drinks/' + recipeId);
 }
 
 // function uploadFile() {
@@ -109,6 +110,7 @@ $(function() {
 
 	// Handle Submission
 	$('#submit').click(function() {
+		$(this).attr('disabled', 'true');
 		$(this).html('PLEASE WAIT...');
 		var ingredients = [];
 		$('.ingredient-list').each(function() {
@@ -131,7 +133,6 @@ $(function() {
 		} else {
 			url = '/drinks/' + uploadStatus + '/edit';
 		}
-		console.log('Posting to '+ url);
 		$.ajax(url,
 			{
 				method: "POST",
