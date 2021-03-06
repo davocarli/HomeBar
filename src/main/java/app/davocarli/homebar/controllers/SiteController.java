@@ -351,8 +351,8 @@ public class SiteController {
 	@RequestMapping("/buckets")
 	public String bucketTest() {
 		AWSCredentials credentials = new BasicAWSCredentials(
-				"AKIAJAEORFIVGXIWLWRA",
-				"Y7mhI+8xokMJfYfYEUMdHIUHP9GGR9BbG7uVCLTR"
+				"AKIAIL5D73FZTAFMGUWA",
+				"5+jn2b/XW3WHRbfMBQ359aLXUSxZ62yVr5qbWy7S"
 		);
 		AmazonS3 s3client = AmazonS3ClientBuilder
 				.standard()
