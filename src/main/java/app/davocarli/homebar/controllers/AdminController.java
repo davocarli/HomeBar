@@ -32,7 +32,7 @@ public class AdminController {
 	@RequestMapping("/admintasks/fixliqueuer")
 	public String fixLiqueuer(HttpSession session) {
 		Object userId = session.getAttribute("user");
-		if (userId != null && userId.equals(1)) {
+		if (userId != null && userId.toString().equals("1")) {
 			List<Recipe> recipes = recipeService.getAll();
 			
 			for (int i = 0; i < recipes.size(); i++) {
