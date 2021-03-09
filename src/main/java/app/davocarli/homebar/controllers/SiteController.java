@@ -371,15 +371,14 @@ public class SiteController {
 	@PostMapping("/recipe/{id}/upload")
 	public ResponseEntity<?> recipeImageUpload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, HttpServletRequest request) {		
 		AWSCredentials credentials = new BasicAWSCredentials(
-				"AKIAJAEORFIVGXIWLWRA",
-				"Y7mhI+8xokMJfYfYEUMdHIUHP9GGR9BbG7uVCLTR"
+				"AKIAWLTRKZJPTGRMFB4Q",
+				"shtESHl+Xp2I5gYQ1tQx2LkRVw0+0kIzBe2t2W5F"
 		);
 		AmazonS3 s3client = AmazonS3ClientBuilder
 				.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(credentials))
 				.withRegion(Regions.US_WEST_2)
 				.build();
-		System.out.println("Created Client");
 		try {
 			String filename = file.getOriginalFilename();
 			String fileExtension = getExtensionByStringHandling(filename).get();
@@ -492,12 +491,23 @@ public class SiteController {
 	@RequestMapping("/profile/{id}")
 	public String getProfile(@PathVariable("id") Long id, HttpSession session, Model model) {
 		Object userId = session.getAttribute("user");
-		if (!userId.equals(null)) {
+		if (userId != null) {
 			User currentUser = userService.findById((Long)userId);
 			model.addAttribute("user", currentUser);
 		}
 		User profileUser = userService.findById(id);
 		model.addAttribute("profile", profileUser);
 		return "profile.jsp";
+	}
+	
+	@RequestMapping("/profile/edit")
+	public String editProfile(HttpSession session, Model model) {
+		Object userId = session.getAttribute("user");
+		if (userId != null) {
+			User user = userService.findById((Long) userId);
+			model.addAttribute("user", user);
+			return "editProfile.jsp";
+		}
+		return "redirect:/login";
 	}
 }

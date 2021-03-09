@@ -104,3 +104,12 @@ li.filter-divider {
 	display: block;
 	margin-top: 10px;
 }
+.uk-nav-primary li a, .uk-offcanvas-bar.uk-light h3 a.uk-offcanvas-close {
+	color: gray!important;
+}
+.uk-offcanvas-bar.uk-light {
+	background-color: white!important;
+}
+.uk-nav-primary li.uk-active a {
+	color: black!important;
+}

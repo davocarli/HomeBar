@@ -37,6 +37,12 @@ public class User {
 	@Column(unique=true)
 	private String username;
 	
+	// A comma-separated list of things to show in profile page
+	private String profileSettings;
+	
+	@Column(columnDefinition = "LONGTEXT")
+	private String bio;
+	
 	@Email
 	@Column(unique=true)
 	private String email;
@@ -143,5 +149,19 @@ public class User {
 	}
 	public void setRatings(List<Rating> ratings) {
 		this.ratings = ratings;
+	}
+	
+	public String getProfileSettings() {
+		return profileSettings;
+	}
+	public void setProfileSettings(String settings) {
+		this.profileSettings = settings;
+	}
+	
+	public String getBio() {
+		return bio;
+	}
+	public void setBio(String bio) {
+		this.bio = bio;
 	}
 }

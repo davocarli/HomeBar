@@ -5,7 +5,8 @@
 <html lang="en">
 	<head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>home-bar.app</title>
     <link rel="stylesheet" type="text/css" href="/css/uikit.min.css">
     <script src="/js/uikit.min.js"></script>
     <script src="/js/uikit-icons.min.js"></script>
@@ -19,15 +20,18 @@
 	<body>
 		<!-- NAVBAR -->
 		<nav class="uk-navbar-container" uk-navbar>
+			<div class="uk-navbar-left">
+				<a href="#offcanvas-menu" class="uk-button uk-button-default uk-hidden@m" uk-toggle>MENU</a>
+			</div>
 			<div class="uk-navbar-center">
-				<div class="uk-navbar-center-left">
+				<div class="uk-navbar-center-left uk-visible@m">
 					<ul class="uk-navbar-nav">
 						<li><a href="/bar">My Bar</a></li>
 						<li><a href="/shopping">Shopping List</a></li>
 					</ul>
 				</div>
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
-				<div class="uk-navbar-center-right">
+				<div class="uk-navbar-center-right uk-visible@m">
 					<ul class="uk-navbar-nav">
 						<li class="uk-active"><a href="/">Make a Drink</a></li>
 						<li><a href="/drinks/new">Add a Drink</a></li>
@@ -35,17 +39,29 @@
 				</div>
 			</div>
 			<div class="uk-navbar-right">
-				<c:if test="${ user != null }"><a href="/profile" class="uk-button uk-button-default">Profile</a></c:if><c:if test="${ user == null }"><a href="/login" class="uk-button uk-button-default">LOG IN</a></c:if>
+				<c:if test="${ user != null }"><a href="/profile" class="uk-button uk-button-default uk-visible@m">Profile</a></c:if><c:if test="${ user == null }"><a href="/login" class="uk-button uk-button-default uk-visible@m">LOG IN</a></c:if>
 			</div>
 		</nav>
+		<div id="offcanvas-menu" uk-offcanvas="overlay: true;">
+			<div class="uk-offcanvas-bar uk-light">
+				<h3><a href="#offcanvas-menu" class="uk-offcanvas-close" uk-close></a></h3>
+				<ul class="uk-nav uk-nav-primary">
+					<li><a href="/bar">My Bar</a></li>
+					<li><a href="/shopping">Shopping List</a></li>
+					<li class="uk-active"><a href="/">Make a Drink</a></li>
+					<li><a href="/drinks/new">Add a Drink</a></li>
+				</ul>
+			</div>
+		</div>
 		<!-- CONTENT -->
 		<div style="background-color: #FFF">
 			<h3 style="margin-left: 20px; margin-bottom: 5px;"><c:if test="${ user != null }">Hi ${ user.firstName }! </c:if>Let's Make a drink!</h3>
 			<c:if test="${ user != null }">
 				<div uk-filter="target: .js-filter" style="background-color: #FFF; padding-bottom: 0px;">
 					<div uk-sticky style="padding: 0px 20px; background-color: #FFF">
-						<div class="uk-grid-small uk-grid-divider uk-child-width-auto" style="margin-bottom: 5px; margin-top: 5px; background-color: #fff;" uk-grid>
-							<div class="filter-menu uk-overflow-auto" style="background-color: #FFF">
+						<div class="uk-grid-small uk-child-width-auto" style="margin-bottom: 5px; margin-top: 5px; background-color: #fff;" uk-grid>
+							<span uk-icon="icon: chevron-left; ratio: 1.6" style="padding: 0px;"></span>
+							<div class="filter-menu uk-overflow-auto uk-width-expand" style="background-color: #FFF">
 								<ul class="uk-subnav uk-subnav-pill filter-menu uk-overflow-auto" uk-margin>
 									<li class="filter-menu filter-visible" id="filter-reset" uk-filter-control="group: make"><a href="#">All Drinks</a></li>
 									<li class="filter-menu filter-visible" uk-filter-control="filter: [data-can-make='true']; group: make"><a href="#">Drinks I Can Make</a></li>
@@ -57,10 +73,11 @@
 									</c:forEach>
 								</ul>
 							</div>
+							<span uk-icon="icon: chevron-right; ratio: 1.6" style="padding: 0px;"></span>
 						</div>
 					</div>
 			</c:if>
-			<ul class="js-filter uk-child-width-1-5@xl uk-child-width-1-4@l uk-child-width-1-3@m uk-child-width-1-1@s uk-text-center home-list" uk-grid="masonry: true">
+			<ul class="js-filter uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-child-width-1-5@xl uk-text-center home-list" uk-grid="masonry: true">
 				<c:forEach items="${ drinks }" var="drink">
 					<li class="drink-card" data-creator="${ drink.creator.username }" data-ingredients="|${ drink.getAllFullIngredients().toUpperCase() }|">
 						<div class="uk-card uk-card-default">
