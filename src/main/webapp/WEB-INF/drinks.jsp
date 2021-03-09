@@ -83,17 +83,18 @@
 					<li class="drink-card" data-creator="${ drink.creator.username }" data-ingredients="|${ drink.getAllFullIngredients().toUpperCase() }|">
 						<div class="uk-card uk-card-default">
 							<a class="uk-link-text link-card-body" href="/drinks/${ drink.id }">
-							<c:if test="${ drink.image.length() > 0 }">
-								<div class="uk-card-media-top home-image-div" style="background-image: url('https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${ drink.image }')">
-									<img class="home-image" src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${ drink.image }" alt="cocktail" onerror="this.parentElement.style.display='none'">
-								</div>
-							</c:if>
-							<span class="uk-card-body">
-								<span class="uk-card-title">${ drink.name }</span>
-								<span class="card-text">${ drink.ingredientList }</span>
-							</span></a>
+								<c:if test="${ drink.image.length() > 0 }">
+									<div class="uk-card-media-top home-image-div" style="background-image: url('https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${ drink.image }')">
+										<img class="home-image" src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${ drink.image }" alt="cocktail" onerror="this.parentElement.style.display='none'">
+									</div>
+								</c:if>
+								<span class="uk-card-body">
+									<span class="uk-card-title">${ drink.name }</span>
+									<span class="card-text">${ drink.ingredientList }</span>
+								</span>
+							</a>
 							<div class="uk-card-footer home-card-footer">
-								<a href="/profile/${ drink.creator.id }" class="uk-text-small uk-text-muted uk-text-left card-link">Added by ${ drink.creator.username }</a>
+								<a href="/profile/${ drink.creator.username }" class="uk-text-small uk-text-muted uk-text-left card-link">Added by ${ drink.creator.username }</a>
 							</div>
 						</div>
 					</li>

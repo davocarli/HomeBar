@@ -58,45 +58,46 @@
 		<div style="padding: 2% 5%; background-color: #F8F8F8">
 			<div class="uk-card uk-card-default uk-grid-collapse uk-margin" uk-grid>
 			    <div>
-			        <div class="uk-card-footer">
-						<h3>
-			        	<c:if test="${ profile.id == user.id }"><a class="uk-text-small uk-card-text uk-card-link uk-text-muted" style="float: right;" href="/profile/edit">Edit Profile Visibility</a></c:if>
-							<c:choose>
-								<c:when test="${ profile.showName }">
-									${ profile.firstName } ${ profile.lastName }'s Profile
-								</c:when>
-								<c:otherwise>
-									${ profile.username }'s Profile
-								</c:otherwise>
-							</c:choose>
-						</h3>
-						<h4>ABOUT</h4>
-						<c:choose>
-							<c:when test="${ profile.bio.length() > 0 }">
-								<p>${ profile.bio }</p>
-							</c:when>
-							<c:otherwise>
-								<p class="uk-text-muted">This user has not added any about info...</p>
-							</c:otherwise>
-						</c:choose>
-			        </div>
-			        <div class="uk-card-footer">
-			        	<c:if test="${ profile.showBar || profile.id == user.id }">
-			        		<h3>This User's Bar<c:if test="${ !profile.showBar }"><span class="uk-text-small uk-text-muted"> (Only Visible to You)</span></c:if></h3>
+			    	<form:form method="POST" action="/profile/edit" modelAttribute="user">
+				        <div class="uk-card-footer">
+							<h3>
+								<c:choose>
+									<c:when test="${ user.showName }">
+										${ user.firstName } ${ user.lastName }'s Profile
+									</c:when>
+									<c:otherwise>
+										${ user.username }'s Profile
+									</c:otherwise>
+								</c:choose>
+							</h3>
+							<div class="uk-grid uk-grid-small uk-child-width-1-3@m">
+								<label><form:checkbox class="uk-checkbox" name="showName" path="showName"/> Show Full Name Instead of Username</label>
+								<form:input class="uk-input" type="text" name="firstName" path="firstName" placeholder="First Name"/>
+								<form:input class="uk-input" type="text" name="lastName" path="lastName" placeholder="Last Name"/>
+							</div>
+							<h4>ABOUT</h4>
+							<form:textarea class="uk-textarea" placeholder="ABOUT INFO" rows="10" path="bio"></form:textarea>
+				        </div>
+				        <div class="uk-card-footer">
+			        		<h3 style="display: inline-block;">
+			        			This User's Bar
+			        		</h3>
+			        		<label style="display: inline-block;"><form:checkbox class="uk-checkbox" name="showBar" path="showBar"/> Show by Bar Contents Publicly</label>
 			        		<ul class="uk-child-width-1-1 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width1-5@l uk-text-center" uk-grid="true">
-			        			<c:forEach items="${ profile.ingredients }" var="ingredient">
+			        			<c:forEach items="${ user.ingredients }" var="ingredient">
 			        				<c:if test="${ ingredient.status == 'stock' }">
 			        					<li>${ ingredient.name }</li>
 			        				</c:if>
 			        			</c:forEach>
 			        		</ul>
-			        	</c:if>
-			        </div>
+			        		<input class="uk-button uk-button-primary" style="margin-top: 10px;" type="submit" value="UPDATE PROFILE"/>
+				        </div>
+			        </form:form>
 			    </div>
 			</div>
        		<h4>Drinks Added By This User</h4>
        		<ul class="uk-child-width-1-1 uk-child-width1-2@s uk-child-width1-3@m uk-child-width-1-4@l uk-child-width-1-5@xl uk-text-center home-list" uk-grid="masonry: true">
-       			<c:forEach items="${ profile.recipes }" var="drink">
+       			<c:forEach items="${ user.recipes }" var="drink">
        				<li class="drink-card">
        					<div class="uk-card uk-card-default">
        						<a class="uk-link-text link-card-body" href="/drinks/${ drink.id }">

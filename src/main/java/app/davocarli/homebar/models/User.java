@@ -37,9 +37,10 @@ public class User {
 	@Column(unique=true)
 	private String username;
 	
-	// A comma-separated list of things to show in profile page
-	private String profileSettings;
-	
+	// Profile Settings
+	private Boolean showName;
+	private Boolean showBar;
+	private Boolean showMenus;
 	@Column(columnDefinition = "LONGTEXT")
 	private String bio;
 	
@@ -54,6 +55,9 @@ public class User {
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
+	
+	@OneToMany(mappedBy="creator", fetch=FetchType.LAZY)
+	private List<Recipe> recipes;
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	private List<Ingredient> ingredients;
@@ -151,17 +155,38 @@ public class User {
 		this.ratings = ratings;
 	}
 	
-	public String getProfileSettings() {
-		return profileSettings;
-	}
-	public void setProfileSettings(String settings) {
-		this.profileSettings = settings;
-	}
-	
 	public String getBio() {
 		return bio;
 	}
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+	
+	public List<Recipe> getRecipes() {
+		return recipes;
+	}
+	public void setRecipes(List<Recipe> recipes) {
+		this.recipes = recipes;
+	}
+	
+	public Boolean getShowName() {
+		return showName;
+	}
+	public void setShowName(Boolean showName) {
+		this.showName = showName;
+	}
+	
+	public Boolean getShowBar() {
+		return showBar;
+	}
+	public void setShowBar(Boolean showBar) {
+		this.showBar = showBar;
+	}
+	
+	public Boolean getShowMenus() {
+		return showMenus;
+	}
+	public void setShowMenus(Boolean showMenus) {
+		this.showMenus = showMenus;
 	}
 }

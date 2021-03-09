@@ -95,7 +95,7 @@ public class SiteController {
 	
 	@RequestMapping("/login")
 	public String loginPage(@ModelAttribute("user") User user, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			return "redirect:/drinks";
 		} else {
@@ -105,7 +105,7 @@ public class SiteController {
 	
 	@RequestMapping("/register")
 	public String registrationPage(@ModelAttribute("user") User user, HttpSession session) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			return "redirect:/drinks";
 		} else {
@@ -132,7 +132,7 @@ public class SiteController {
 			attrs.addFlashAttribute("loginErrors", "Invalid username and password.");
 			return "redirect:/login";
 		} else {
-			session.setAttribute("user", user.getId());
+			session.setAttribute("userId", user.getId());
 			return "redirect:/";
 		}
 	}
@@ -146,7 +146,7 @@ public class SiteController {
 	
 	@RequestMapping("/")
 	public String drinksList(HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		List<Recipe> recipes = recipeService.getAll();
 		model.addAttribute("drinks", recipes);
 		if (userId != null) {
@@ -164,7 +164,7 @@ public class SiteController {
 	
 	@RequestMapping("/bar")
 	public String myBar(@ModelAttribute("ingredient") Ingredient ingredient, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			User user = userService.findById((Long)userId);
 			List<Ingredient> unclassified = user.getIngredients();
@@ -179,7 +179,7 @@ public class SiteController {
 	
 	@PostMapping("/bar/add")
 	public String addBarIngredient(@ModelAttribute("ingredient") Ingredient ingredient, BindingResult result, HttpSession session) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		ingredient.setStatus("stock");
 		ingredientValidator.validate(ingredient, result);
 		if (userId != null && !result.hasErrors()) {
@@ -193,7 +193,7 @@ public class SiteController {
 	@RequestMapping("/ingredients/{id}/remove")
 	public String removeBarIngredient(@PathVariable("id") Long id, HttpSession session, HttpServletRequest request) {
 		Ingredient ingredient = ingredientService.getIngredient(id);
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null && userId.equals(ingredient.getUser().getId())) {
 			ingredientService.deleteIngredient(ingredient);
 		}
@@ -203,7 +203,7 @@ public class SiteController {
 	@RequestMapping("/shopping/{id}/add")
 	public String moveIngredientFromBarToShopping(@PathVariable("id") Long id, HttpSession session) {
 		Ingredient ingredient = ingredientService.getIngredient(id);
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null && userId.equals(ingredient.getUser().getId())) {
 			ingredient.setStatus("shop");
 			ingredientService.updateIngredient(ingredient);
@@ -213,7 +213,7 @@ public class SiteController {
 	
 	@RequestMapping("/shopping")
 	public String myShoppingList(@ModelAttribute("ingredient") Ingredient ingredient, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			User user = userService.findById((Long)userId);
 			List<Ingredient> unclassified = user.getIngredients();
@@ -229,7 +229,7 @@ public class SiteController {
 	@RequestMapping("/bar/{id}/add")
 	public String moveIngredientFromShoppingToBar(@PathVariable("id") Long id, HttpSession session) {
 		Ingredient ingredient = ingredientService.getIngredient(id);
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null && userId.equals(ingredient.getUser().getId())) {
 			ingredient.setStatus("stock");
 			ingredientService.updateIngredient(ingredient);
@@ -239,7 +239,7 @@ public class SiteController {
 	
 	@PostMapping("/shopping/add")
 	public String addShoppingIngredient(@ModelAttribute("ingredient") Ingredient ingredient, BindingResult result, HttpSession session) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		ingredient.setStatus("shop");
 		ingredientValidator.validate(ingredient, result);
 		if (userId != null && !result.hasErrors()) {
@@ -252,7 +252,7 @@ public class SiteController {
 	
 	@RequestMapping("/drinks/new")
 	public String newDrink(HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			return "newDrink.jsp";
 		} else {
@@ -262,7 +262,7 @@ public class SiteController {
 	
 	@PostMapping("/drinks/new")
 	public ResponseEntity<?> addDrink(HttpSession session, @RequestBody LinkedHashMap<String,Object> body) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		try {
 			if (userId != null) {
 				Recipe recipe = new Recipe();
@@ -300,7 +300,7 @@ public class SiteController {
 	
 	@PostMapping("/drinks/{id}/edit")
 	public ResponseEntity<?> updateDrink(@PathVariable("id") Long id, HttpSession session, @RequestBody LinkedHashMap<String, Object> body) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		try {
 			if (userId == null) {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -348,26 +348,6 @@ public class SiteController {
 	      .map(f -> f.substring(filename.lastIndexOf(".")));
 	}
 	
-	@RequestMapping("/buckets")
-	public String bucketTest() {
-		AWSCredentials credentials = new BasicAWSCredentials(
-				"AKIAIL5D73FZTAFMGUWA",
-				"5+jn2b/XW3WHRbfMBQ359aLXUSxZ62yVr5qbWy7S"
-		);
-		AmazonS3 s3client = AmazonS3ClientBuilder
-				.standard()
-				.withCredentials(new AWSStaticCredentialsProvider(credentials))
-				.withRegion(Regions.US_WEST_2)
-				.build();
-		
-		List<Bucket> buckets = s3client.listBuckets();
-		for(Bucket bucket : buckets) {
-			System.out.println(bucket);
-			System.out.println(bucket.getName());
-		}
-		return "redirect:/";
-	}
-	
 	@PostMapping("/recipe/{id}/upload")
 	public ResponseEntity<?> recipeImageUpload(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, HttpServletRequest request) {		
 		AWSCredentials credentials = new BasicAWSCredentials(
@@ -404,7 +384,7 @@ public class SiteController {
 	
 	@RequestMapping("/drinks/{id}")
 	public String drinkDetails(@PathVariable("id") Long id, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			User user = userService.findById((Long)userId);
 			model.addAttribute("user", user);
@@ -416,7 +396,7 @@ public class SiteController {
 	
 	@RequestMapping("/drinks/{id}/edit")
 	public String editDrink(@PathVariable("id") Long id, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		Recipe recipe = recipeService.getRecipe(id);
 		if (userId != null && recipe.getCreator().getId().equals((Long)userId)) {
 			model.addAttribute("recipe", recipe);
@@ -428,7 +408,7 @@ public class SiteController {
 	
 	@RequestMapping("/ingredients/{id}/edit")
 	public String editIngredient(@PathVariable("id") Long id, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
 			User user = userService.findById((Long) userId);
 			Ingredient ingredient = ingredientService.getIngredient(id);
@@ -449,7 +429,7 @@ public class SiteController {
 	
 	@PostMapping("/ingredients/{id}/edit")
 	public String updateIngredient(@ModelAttribute Ingredient ingredient, @PathVariable("id") Long id, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		Ingredient currentIngredient = ingredientService.getIngredient(id);
 		if (userId == null || ingredient.getName().equals("") || !currentIngredient.getUser().getId().equals((Long)userId)) {
 			return "redirect:/ingredients/" + ingredient.getId().toString() + "/edit";
@@ -467,7 +447,7 @@ public class SiteController {
 	
 	@RequestMapping("/drinks/{id}/delete")
 	public String deleteDrink(@PathVariable("id") Long id, HttpSession session) {
-		Long userId = (Long)session.getAttribute("user");
+		Long userId = (Long)session.getAttribute("userId");
 		Recipe recipe = recipeService.getRecipe(id);
 		if (userId.equals(recipe.getCreator().getId())) {
 			List<Ingredient> ingredients = recipe.getIngredients();
@@ -481,33 +461,54 @@ public class SiteController {
 	
 	@RequestMapping("/profile")
 	public String myProfile(HttpSession session) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (!userId.equals(null)) {
-			return "redirect:/profile/" + userId.toString();
+			User user = userService.findById((Long)userId);
+			return "redirect:/profile/" + user.getUsername();
 		}
-		return "redirect:/";
+		return "redirect:/login";
 	}
 	
-	@RequestMapping("/profile/{id}")
-	public String getProfile(@PathVariable("id") Long id, HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+	@RequestMapping("/profile/{username}")
+	public String getProfile(@PathVariable("username") String username, HttpSession session, Model model) {
+		Object userId = session.getAttribute("userId");
+		User profileUser = userService.findByUsername(username);
+		model.addAttribute("profile", profileUser);
+		if (profileUser == null) {
+			return "redirect:/";
+		}
 		if (userId != null) {
 			User currentUser = userService.findById((Long)userId);
 			model.addAttribute("user", currentUser);
 		}
-		User profileUser = userService.findById(id);
-		model.addAttribute("profile", profileUser);
 		return "profile.jsp";
 	}
 	
 	@RequestMapping("/profile/edit")
 	public String editProfile(HttpSession session, Model model) {
-		Object userId = session.getAttribute("user");
+		Object userId = session.getAttribute("userId");
 		if (userId != null) {
-			User user = userService.findById((Long) userId);
+			User user = userService.findById((Long)userId);
 			model.addAttribute("user", user);
 			return "editProfile.jsp";
 		}
 		return "redirect:/login";
+	}
+	
+	@PostMapping("/profile/edit")
+	public String updateProfile(@Valid @ModelAttribute User user, HttpSession session, Model model) {
+		Object userId = session.getAttribute("userId");
+		if (userId != null) {
+			User currentUser = userService.findById((Long)userId);
+			currentUser.setBio(user.getBio());
+			currentUser.setFirstName(user.getFirstName());
+			currentUser.setLastName(user.getLastName());
+			currentUser.setShowName(user.getShowName());
+			currentUser.setShowBar(user.getShowBar());
+			//TODO: VALIDATE USER
+			userService.updateUser(currentUser);
+			userService.updateUser(user);
+		}
+		return "redirect:/profile";
 	}
 }
