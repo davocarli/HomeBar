@@ -5,7 +5,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
     <link rel="stylesheet" type="text/css" href="/css/uikit.min.css">
     <script src="/js/uikit.min.js"></script>
     <script src="/js/uikit-icons.min.js"></script>

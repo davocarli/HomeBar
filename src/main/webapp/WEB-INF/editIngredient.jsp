@@ -58,22 +58,23 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
+					<li><a href="/profile">Profile</a></li>
 				</ul>
 			</div>
 		</div>
 		<!-- CONTENT -->
-		<div style="padding: 50px">
+		<div style="padding: 2% 5%">
 			<h3>Edit ingredient</h3>
-			<form:form method="POST" action="/ingredients/${ ingredient.id }/edit" modelAttribute="ingredient">
-				<span class="uk-text-danger">${ formErrors }</span>
-				<fieldset class="uk-fieldset">
-					<div class="uk-inline uk-width-2-2">
-						<form:input class="uk-input uk-form-width-large" path="name" placeholder="Ingredient Name"/>
-						<form:input class="uk-input uk-form-width-large selectize" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
-						<input class="uk-button uk-inline uk-button-primary" type="submit" value="UPDATE"/>
-						<!--TODO: DYNAMICALLY ADD SUGGESTED OPTIONS BASED ON OTHER INGREDIENTS IN DATABASE -->
-					</div>
-				</fieldset>
+			<form:form class="uk-grid-small" method="POST" action="/ingredients/${ ingredient.id }/edit" modelAttribute="ingredient" uk-grid="true">
+				<div class="uk-width-1-3@s">
+					<form:input class="uk-input" path="name" placeholder="Ingredient Name"/>
+				</div>
+				<div class="uk-width-1-2@s">
+					<form:input class="uk-input selectize" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
+				</div>
+				<div class="uk-width-1-6@s">
+					<input class="uk-button uk-inline uk-button-primary" type="submit" value="UPDATE"/>
+				</div>	
 			</form:form>
 		</div>
 	</body>

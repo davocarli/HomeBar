@@ -49,11 +49,12 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
+					<li><a href="/profile">Profile</a></li>
 				</ul>
 			</div>
 		</div>
 		<!-- CONTENT -->
-		<div style="padding: 50px;">
+		<div style="padding: 2% 5%;">
 			<c:choose>
 				<c:when test="${ recipe.image.length() > 0 }">	
 					<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
@@ -66,7 +67,7 @@
 					            <h4>Ingredients</h4>
 					            <ul>
 					            	<c:forEach items="${ recipe.ingredients }" var="ingredient">
-					            		<li>${ ingredient.name } (${ ingredient.amount })</li>
+					            		<li>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li>
 					            	</c:forEach>
 					            </ul>
 					            <h4>Method</h4>

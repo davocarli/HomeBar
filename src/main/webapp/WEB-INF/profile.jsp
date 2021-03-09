@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>  <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -49,17 +50,18 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
+					<li><a href="/profile">Profile</a></li>
 				</ul>
 			</div>
 		</div>
 		<!-- CONTENT -->
-		<div style="padding: 50px;">
+		<div style="padding: 2% 5%;">
 			<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
 			    <div>
 			        <div class="uk-card-body">
 						<h3>
 							<c:choose>
-								<c:when test="${ profile.profileSettings.contains("name") }">
+								<c:when test="${ fn:contains(profile.profileSettings, 'name') }">
 									${ profile.firstName } ${ profile.lastName }
 								</c:when>
 								<c:otherwise>

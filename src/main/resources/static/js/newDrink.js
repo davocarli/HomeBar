@@ -1,29 +1,3 @@
-// // Compress Image File
-// function compressImage(file, width) {
-// 	const reader = new FileReader();
-
-// 	reader.readAsDataURL(file);
-
-// 	reader.onload = function(event) {
-// 		const imgElement = document.createElement('img');
-// 		imgElement.src = event.target.result;
-
-// 		imgElement.onload = function(e) {
-// 			const canvas = document.createElement("canvas");
-
-// 			const scaleSize = width / e.target.width;
-// 			canvas.width = width;
-// 			canvas.height = e.target.height * scaleSize;
-
-// 			const ctx = canvas.getContext("2d");
-
-// 			ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
-// 			return canvas;
-// 		}
-// 	}
-// }
-
 // File Upload
 async function uploadFile() {
 
@@ -45,60 +19,11 @@ async function uploadFile() {
 	window.location.replace('/drinks/' + recipeId);
 }
 
-// function uploadFile() {
-// 	alert('Starting method');
-// 	const file = document.querySelector('#fileupload').files[0];
-
-// 	const recipeId = $('#upload-button').html();
-
-// 	const WIDTH = 200;
-
-// 	if (file) {
-// 		alert('There is a file');
-// 		const reader = new FileReader();
-// 		reader.readAsDataURL(file);
-
-// 		reader.onload = function(event) {
-// 			alert('Event one');
-// 			const imgElement = document.createElement("img");
-// 			imgElement.src = event.target.result;
-
-// 			imgElement.onload = function(e) {
-// 				alert('Event 2');
-// 				const canvas = document.createElement("canvas");
-// 				const scaleSize = WIDTH / e.target.width;
-// 				canvas.width = WIDTH;
-// 				canvas.height = e.target.height * scaleSize;
-
-// 				const ctx = canvas.getContext("2d");
-
-// 				ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-
-// 				canvas.toBlob((blob) => {
-// 					alert('blob & post');
-// 					let formData = new FormData();
-// 					formData.append('file', blob, 'file.png');
-
-// 					$.ajax('/recipe/'+recipeId+'/upload', {
-// 						method: "POST",
-// 						contentType: 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
-// 						processData: false,
-// 						body: formData
-// 					}).done((data) => {
-// 						alert(data);
-// 					})
-// 				})
-// 			}
-// 		}
-// 	}
-// }
-
 $(function() {
 	// Add new Ingredients on click
+	const ingredientFields = '<div class="uk-width-1-3@s"><input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient"/></div><div class="uk-width-1-2@s"><input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..."/></div><div class="uk-width-1-6@s"><input class="uk-input amount" placeholder="Amount"/></div>'
 	$('#addIngredient').click(function() {
-		$('#ingredients').append(
-			'<fieldset class="uk-fieldset ingredient-list"><input class="uk-input uk-form-width-large ingredient" type="text" placeholder="Preferred Ingredient"/><input class="uk-input uk-form-width-large selectize-init" multiple="multiple" placeholder="Acceptable substitutes..."/><input class="uk-input uk-form-width-small amount" placeholder="Amount"/></fieldset>'
-		);
+		$(ingredientFields).insertBefore('#addIngredient');
 		$('.selectize-init').selectize({
 			create: true,
 			delimiter: '|',

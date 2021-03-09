@@ -58,22 +58,20 @@
 					<li class="uk-active"><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
+					<li><a href="/profile">Profile</a></li>
 				</ul>
 			</div>
 		</div>
 		<!-- CONTENT -->
-		<div style="padding: 50px">
+		<div style="padding: 2% 5%">
 			<h3>Add a new ingredient to your shopping list</h3>
-			<form:form method="POST" action="/shopping/add" modelAttribute="ingredient">
-				<span class="uk-text-danger">${ formErrors }</span>
-				<fieldset class="uk-fieldset">
-					<div class="uk-inline uk-width-2-2">
-						<form:input class="uk-input uk-form-width-large" path="name" placeholder="Ingredient Name"/>
-<%-- 						<form:input class="uk-input uk-form-width-large selectize" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/> --%>
-						<input class="uk-button uk-inline uk-button-primary" type="submit" value="ADD"/>
-						<!--TODO: DYNAMICALLY ADD SUGGESTED OPTIONS BASED ON OTHER INGREDIENTS IN DATABASE -->
-					</div>
-				</fieldset>
+			<form:form class="uk-grid-small" method="POST" action="/shopping/add" modelAttribute="ingredient" uk-grid="true">
+				<div class="uk-width-1-2@s">
+					<form:input class="uk-input" path="name" placeholder="Ingredient Name"/>
+				</div>
+				<div class="uk-width-1-6@s">
+					<input class="uk-button uk-inline uk-button-primary" type="submit" value="ADD"/>
+				</div>
 			</form:form>
 		</div>
 		<div style="padding: 50px">
@@ -89,8 +87,7 @@
 				<tbody>
 					<c:forEach items="${ ingredients }" var="ingredient">
 						<tr>
-							<td>${ ingredient.name }</td>
-<%-- 							<td>${ ingredient.substituteNames.replace('|', ', ') }</td> --%>
+							<td class="uk-table-link"><a class="uk-link-reset" href="/ingredients/${ ingredient.id }/edit">${ ingredient.name }</a></td>
 							<td><a class="uk-link-text" href="/ingredients/${ ingredient.id }/remove">Remove</a>, <a class="uk-link-text" href="/bar/${ ingredient.id }/add">Restock</a></td>
 						</tr>
 					</c:forEach>

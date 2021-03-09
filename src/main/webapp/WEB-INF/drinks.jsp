@@ -50,6 +50,7 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li class="uk-active"><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
+					<li><a href="/profile">Profile</a></li>
 				</ul>
 			</div>
 		</div>

@@ -50,28 +50,31 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li class="uk-active"><a href="/drinks/new">Add a Drink</a></li>
+					<li><a href="/profile">Profile</a></li>
 				</ul>
 			</div>
 		</div>
 		<!-- CONTENT -->
-		<div style="padding: 50px;">
+		<div style="padding: 2% 5%;">
 			<h3>Submit a new recipe</h3>
 			<button id="upload-button" onclick="uploadFile()">UPLOAD</button>
-			<form>
-				<fieldset class="uk-fieldset">
-					<input class="uk-input uk-form-width-large" type="text" id="name" placeholder="Recipe Name"/>
+			<form class="uk-grid-small" uk-grid>
+				<div class="uk-width-5-6@s">
+					<input class="uk-input" type="text" id="name" placeholder="Recipe Name"/>
+				</div>
+				<div class="uk-width-1-6@s">
 					<div uk-form-custom="target: true">
 						<input type="file" id="fileupload" name="fileupload" accept="image/*">
-						<input class="uk-input uk-form-width-large" type="text" placeholder="Upload Image" disabled>
+						<input class="uk-input" type="text" placeholder="Upload Image" disabled>
 					</div>
-				</fieldset>
-				<div id="ingredients">
 				</div>
-				<a id="addIngredient">Add Ingredient</a>
-				<fieldset class="uk-fieldset">
-					<textarea class="uk-textarea uk-form-width-large" id="instructions" placeholder="Drink Instructions..." rows="10" style="width: 1134px;"></textarea>
-					<input class="uk-input" type="text" id="source" placeholder="Source (Give credit if this is not your own recipe)." style="width: 1134px; margin-top: 10px;"/>
-				</fieldset>
+				<a class="uk-grid-1-1" id="addIngredient">Add Ingredient</a>
+				<div class="uk-width-1-1">
+					<textarea class="uk-textarea" id="instructions" placeholder="Drink Instructions..." rows="10"></textarea>
+				</div>
+				<div class="uk-width-1-1">
+					<input class="uk-input" type="text" id="source" placeholder="Source (Give credit if this is not your original recipe)."/>
+				</div>
 			</form>
 			<button class="uk-button uk-button-primary" id="submit">SUBMIT</button>
 		</div>
