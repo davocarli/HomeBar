@@ -14,6 +14,7 @@ $(function() {
 	$('.drink-card').each(function() {
 		var card = $(this);
 		var ingredients = card.attr('data-ingredients').split('\n').filter(function(el) {return el.replaceAll('|', '').length != 0});
+		console.log(ingredients);
 
 		var filters = '';
 

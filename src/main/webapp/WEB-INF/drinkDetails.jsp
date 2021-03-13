@@ -15,12 +15,16 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<script src="/js/drinkDetails.js"></script>
 	</head>
 	<body>
 		<!-- NAVBAR -->
 		<nav class="uk-navbar-container" uk-navbar>
 			<div class="uk-navbar-left">
 				<a href="#offcanvas-menu" class="uk-button uk-button-default uk-hidden@m" uk-toggle>MENU</a>
+			</div>
+			<div class="uk-navbar-left">
+				<c:if test="${ user != null }"><a href="/logout" class="uk-button uk-button-default uk-visible@m">Log out</a></c:if>
 			</div>
 			<div class="uk-navbar-center">
 				<div class="uk-navbar-center-left uk-visible@m">
@@ -32,7 +36,7 @@
 				<a class="uk-navbar-item uk-logo" href="#">home-bar.app</a>
 				<div class="uk-navbar-center-right uk-visible@m">
 					<ul class="uk-navbar-nav">
-						<li><a href="/">Make a Drink</a></li>
+						<li><c:choose><c:when test="${ assumedUser == null }"><a href="/">Make a Drink</a></c:when><c:otherwise><a href="/?assumeduser=${ assumedUser }">Make a Drink</a></c:otherwise></c:choose></li>
 						<li><a href="/drinks/new">Add a Drink</a></li>
 					</ul>
 				</div>
@@ -47,9 +51,10 @@
 				<ul class="uk-nav uk-nav-primary">
 					<li><a href="/bar">My Bar</a></li>
 					<li><a href="/shopping">Shopping List</a></li>
-					<li><a href="/">Make a Drink</a></li>
+					<li><c:choose><c:when test="${ assumedUser == null }"><a href="/">Make a Drink</a></c:when><c:otherwise><a href="/?assumeduser=${ assumeduser }">Make a Drink</a></c:otherwise></c:choose></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
-					<li><a href="/profile">Profile</a></li>
+					<li><c:choose><c:when test="${ user != null }"><a href="/profile">Profile</a></c:when><c:otherwise><a href="/login">Log In</a></c:otherwise></c:choose></li>
+					<li><c:if test="${ user != null }"><a href="/logout">Log Out</a></c:if></li>
 				</ul>
 			</div>
 		</div>
@@ -59,7 +64,7 @@
 				<c:when test="${ recipe.image.length() > 0 }">	
 					<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
 					    <div class="uk-flex-last@s uk-card-media-right uk-cover-container drink-detail-image">
-					        <img class="uk-cover-container" uk-cover src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/1000/${ recipe.image }" alt="cocktail" onerror="this.style.display='none'">
+					        <img class="uk-cover-container" uk-cover src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/1000/${ recipe.image }" alt="cocktail" onerror="this.src = 'https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/fullSize/${ recipe.image }'">
 					    </div>
 					    <div>
 					        <div class="uk-card-body">
@@ -83,7 +88,7 @@
 			            	<h4>Ingredients</h4>
 			            	<ul>
 			            		<c:forEach items="${ recipe.ingredients }" var="ingredient">
-			            			<li>${ ingredient.name } (${ ingredient.amount })</li>
+			            			<li>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li>
 			            		</c:forEach>
 			            	</ul>
 			            </div>

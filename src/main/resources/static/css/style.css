@@ -77,18 +77,39 @@ caption h3 {
 .drink-detail-image {
 	max-height: 85vh;
 }
-ul.filter-menu, div.filter-menu {
+div.filter-menu {
+	height: 39px;
+	max-height: 100vh;
+}
+div.filter-menu.expand {
+	max-height: 100vh;
+	height: auto;
+}
+ul.filter-menu.expand {
+	white-space: normal;
+}
+#filter-dropdown-button {
+	transition: transform 0.25s ease-in-out;
+}
+#filter-dropdown-button.expand {
+	transform: rotate(180deg);
+}
+ul.filter-menu {
 	flex-wrap: nowrap;
 	white-space: nowrap;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	display: inline-block;
 }
-li.filter-menu {
+li.filter-menu, li.filter-menu a {
+	margin: 0px!important;
+	margin-bottom: 1px!important;
 	display: none;
 	padding-left: 10px;
 }
 li.filter-visible {
+	margin: 0px;
+	padding-left: 10px;
 	display: inline-block;
 }
 li.filter-divider {

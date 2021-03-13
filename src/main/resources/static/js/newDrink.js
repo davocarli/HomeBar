@@ -21,7 +21,7 @@ async function uploadFile() {
 
 $(function() {
 	// Add new Ingredients on click
-	const ingredientFields = '<div class="uk-width-1-3@s"><input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient"/></div><div class="uk-width-1-2@s"><input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..."/></div><div class="uk-width-1-6@s"><input class="uk-input amount" placeholder="Amount"/></div>'
+	const ingredientFields = '<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid><div class="uk-width-1-3@s"><input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient"/></div><div class="uk-width-1-2@s"><input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..."/></div><div class="uk-width-1-6@s"><input class="uk-input amount" placeholder="Amount"/></div></div>'
 	$('#addIngredient').click(function() {
 		$(ingredientFields).insertBefore('#addIngredient');
 		$('.selectize-init').selectize({

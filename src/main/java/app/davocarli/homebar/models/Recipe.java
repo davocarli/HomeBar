@@ -28,7 +28,7 @@ public class Recipe {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Size(min=5, message="Drink Name must be at least 50 characters.")
+	@Size(min=5, message="Drink Name must be at least 5 characters.")
 	private String name;
 	
 	@Size(min=10, message="Please include at least 10 characters.")

@@ -23,6 +23,9 @@
 			<div class="uk-navbar-left">
 				<a href="#offcanvas-menu" class="uk-button uk-button-default uk-hidden@m" uk-toggle>MENU</a>
 			</div>
+			<div class="uk-navbar-left">
+				<c:if test="${ user != null }"><a href="/logout" class="uk-button uk-button-default uk-visible@m">Log out</a></c:if>
+			</div>
 			<div class="uk-navbar-center">
 				<div class="uk-navbar-center-left uk-visible@m">
 					<ul class="uk-navbar-nav">
@@ -50,7 +53,8 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
-					<li><a href="/profile">Profile</a></li>
+					<li class="uk-active"><c:choose><c:when test="${ user != null }"><a href="/profile">Profile</a></c:when><c:otherwise><a href="/login">Log In</a></c:otherwise></c:choose></li>
+					<li><c:if test="${ user != null }"><a href="/logout">Log Out</a></c:if></li>
 				</ul>
 			</div>
 		</div>
@@ -82,7 +86,7 @@
 			        </div>
 			        <div class="uk-card-footer">
 			        	<c:if test="${ profile.showBar || profile.id == user.id }">
-			        		<h3>This User's Bar<c:if test="${ !profile.showBar }"><span class="uk-text-small uk-text-muted"> (Only Visible to You)</span></c:if></h3>
+			        		<h3>This User's Bar<c:if test="${ !profile.showBar }"><span class="uk-text-small uk-text-muted"> (Only Visible to You)</span></c:if> <c:if test="${ profile.showBar }"><a class="uk-text-small uk-card-text uk-card-link uk-text-muted" style="float: right;" href="/?assumeduser=${ profile.username }">Browse Drinks as This User</a></c:if></h3>
 			        		<ul class="uk-child-width-1-1 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width1-5@l uk-text-center" uk-grid="true">
 			        			<c:forEach items="${ profile.ingredients }" var="ingredient">
 			        				<c:if test="${ ingredient.status == 'stock' }">

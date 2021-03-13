@@ -26,4 +26,21 @@ public class IngredientValidator implements Validator {
 			errors.rejectValue("status", "INVALID");
 		}
 	}
+	
+	public boolean validate(Object target) {
+		Ingredient ingredient = (Ingredient)target;
+		
+		String status = ingredient.getStatus();
+		
+		if (ingredient.getName().length() < 3 ||
+			(
+				status != "stock" &&
+				status != "shop" &&
+				status != "recipe"
+					)	
+			) {
+			return false;
+		}
+		return true;
+	}
 }

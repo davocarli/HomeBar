@@ -57,4 +57,9 @@ public class UserService {
 	public User updateUser(User user) {
 		return repo.save(user);
 	}
+	
+	// Delete user
+	public void deleteUser(User user) {
+		repo.delete(user);
+	}
 }

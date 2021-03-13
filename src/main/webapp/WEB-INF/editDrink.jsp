@@ -23,6 +23,9 @@
 			<div class="uk-navbar-left">
 				<a href="#offcanvas-menu" class="uk-button uk-button-default uk-hidden@m" uk-toggle>MENU</a>
 			</div>
+			<div class="uk-navbar-left">
+				<c:if test="${ user != null }"><a href="/logout" class="uk-button uk-button-default uk-visible@m">Log out</a></c:if>
+			</div>
 			<div class="uk-navbar-center">
 				<div class="uk-navbar-center-left uk-visible@m">
 					<ul class="uk-navbar-nav">
@@ -49,8 +52,9 @@
 					<li><a href="/bar">My Bar</a></li>
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
-					<li><a href="/drinks/new">Add a Drink</a></li>
-					<li><a href="/profile">Profile</a></li>
+					<li class="uk-active"><a href="/drinks/new">Add a Drink</a></li>
+					<li><c:choose><c:when test="${ user != null }"><a href="/profile">Profile</a></c:when><c:otherwise><a href="/login">Log In</a></c:otherwise></c:choose></li>
+					<li><c:if test="${ user != null }"><a href="/logout">Log Out</a></c:if></li>
 				</ul>
 			</div>
 		</div>
@@ -69,14 +73,16 @@
 						</div>
 				</div>
 				<c:forEach items="${ recipe.ingredients }" var="ingredient">
-					<div class="uk-width-1-3@s">
-						<input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient" value="${ ingredient.name }"/>
-					</div>
-					<div class="uk-width-1-2@s">
-						<input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..." value="${ ingredient.substituteNames }"/>
-					</div>
-					<div class="uk-width-1-6@s">
-						<input class="uk-input amount" placeholder="Amount" value="${ ingredient.amount }"/>
+					<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid>
+						<div class="uk-width-1-3@s">
+							<input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient" value="${ ingredient.name }"/>
+						</div>
+						<div class="uk-width-1-2@s">
+							<input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..." value="${ ingredient.substituteNames }"/>
+						</div>
+						<div class="uk-width-1-6@s">
+							<input class="uk-input amount" placeholder="Amount" value="${ ingredient.amount }"/>
+						</div>
 					</div>
 				</c:forEach>
 				<a id="addIngredient">Add Ingredient</a>

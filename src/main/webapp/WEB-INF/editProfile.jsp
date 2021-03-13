@@ -23,6 +23,9 @@
 			<div class="uk-navbar-left">
 				<a href="#offcanvas-menu" class="uk-button uk-button-default uk-hidden@m" uk-toggle>MENU</a>
 			</div>
+			<div class="uk-navbar-left">
+				<c:if test="${ user != null }"><a href="/logout" class="uk-button uk-button-default uk-visible@m">Log out</a></c:if>
+			</div>
 			<div class="uk-navbar-center">
 				<div class="uk-navbar-center-left uk-visible@m">
 					<ul class="uk-navbar-nav">
@@ -50,7 +53,8 @@
 					<li><a href="/shopping">Shopping List</a></li>
 					<li><a href="/">Make a Drink</a></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
-					<li><a href="/profile">Profile</a></li>
+					<li class="uk-active"><c:choose><c:when test="${ user != null }"><a href="/profile">Profile</a></c:when><c:otherwise><a href="/login">Log In</a></c:otherwise></c:choose></li>
+					<li><c:if test="${ user != null }"><a href="/logout">Log Out</a></c:if></li>
 				</ul>
 			</div>
 		</div>

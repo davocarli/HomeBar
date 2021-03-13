@@ -3,13 +3,16 @@ package app.davocarli.homebar.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import app.davocarli.homebar.models.Ingredient;
+import app.davocarli.homebar.models.Recipe;
 import app.davocarli.homebar.repositories.IngredientRepository;
+import app.davocarli.homebar.validators.IngredientValidator;
 
 @Service
 public class IngredientService {
@@ -78,5 +81,22 @@ public class IngredientService {
 	// Delete Idea (by Providing Idea Object)
 	public void deleteIngredient(Ingredient ingredient) {
 		repo.delete(ingredient);
+	}
+	
+	// Add list of ingredients from ArrayList<Object>
+	public void addArrayOfObjects(ArrayList<Object> ingredients, Recipe recipe) {
+		IngredientValidator validator = new IngredientValidator();
+		for (int i = 0; i < ingredients.size(); i++) {
+			LinkedHashMap<String, String> map = (LinkedHashMap<String, String>)ingredients.get(i);
+			Ingredient ingredient = new Ingredient();
+			ingredient.setName(map.get("name"));
+			ingredient.setSubstituteNames(map.get("substitutes"));
+			ingredient.setAmount(map.get("amount"));
+			ingredient.setRecipe(recipe);
+			ingredient.setStatus("recipe");
+			if (validator.validate(ingredient)) {
+				this.addIngredient(ingredient);
+			}
+		}
 	}
 }
