@@ -1,14 +1,19 @@
 package app.davocarli.homebar.controllers;
 
+import java.util.LinkedHashMap;
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import app.davocarli.homebar.models.Ingredient;
@@ -65,9 +70,13 @@ public class BarController {
 		Ingredient ingredient = ingredientService.getIngredient(id);
 		if (user != null && user.getId().equals(ingredient.getUser().getId())) {
 			ingredient.setStatus("shop");
-			ingredientService.updateIngredient(ingredient);
+			ingredientService.deleteIngredient(ingredient);
 		}
-		return "redirect/bar";
+		Optional<String> page = auth.getPreviousPageByRequest(request);
+		if (!page.isPresent()) {
+			return "redirect:/bar";
+		}
+		return page.get();
 	}
 	
 	@RequestMapping("/shopping")
@@ -142,5 +151,20 @@ public class BarController {
 				return "redirect:/shopping";
 			}
 		}
+	}
+	
+	//TODO: Validate that user is not null. Add this to ingredient validator.
+	@PostMapping("/shopping/clone")
+	public ResponseEntity<?> cloneDrinkToShopping(HttpSession session, @RequestBody LinkedHashMap<String, Long> body) {
+		Long id = body.get("id");
+		User user = auth.authUser(session);
+		Ingredient oldIngredient = ingredientService.getIngredient(id);
+		Ingredient newIngredient = new Ingredient();
+		newIngredient.setName(oldIngredient.getName());
+		newIngredient.setSubstituteNames(oldIngredient.getSubstituteNames());
+		newIngredient.setUser(user);
+		newIngredient.setStatus("shop");
+		ingredientService.addIngredient(newIngredient);
+		return ResponseEntity.ok("success");
 	}
 }

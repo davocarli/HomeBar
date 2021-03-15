@@ -32,7 +32,7 @@ public class Auth {
 		return user;
 	}
 	
-	protected Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
+	public Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
 	   return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
 	}
 }

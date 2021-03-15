@@ -15,14 +15,11 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<script src="/js/home-bar.js"></script>
 	<script>
 		$(function() {
-			$('.selectize').selectize({
-				plugins: ['remove_button'],
-				delimiter: '|',
-				create: true,
-			});
-		})
+			initSelectize();
+		});
 	</script>
 	</head>
 	<body>

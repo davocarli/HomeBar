@@ -2,6 +2,27 @@ function anyCommon(arr1, arr2) {
 	return arr1.some(item => arr2.includes(item));
 }
 
+// File Upload
+async function uploadFile() {
+
+	const file = document.querySelector('#fileupload').files[0];
+
+	const recipeId = $('#upload-button').html();
+	
+	if (file) {
+	
+		let formData = new FormData();
+		formData.append("file", file);
+	
+		let response = await fetch("/recipe/" + recipeId + "/upload", {
+			method: "POST",
+			body: formData
+		})
+	}
+
+	window.location.replace('/drinks/' + recipeId);
+}
+
 $(function() {
 
 	var filterArrays = [];
@@ -14,7 +35,6 @@ $(function() {
 	$('.drink-card').each(function() {
 		var card = $(this);
 		var ingredients = card.attr('data-ingredients').split('\n').filter(function(el) {return el.replaceAll('|', '').length != 0});
-		console.log(ingredients);
 
 		var filters = '';
 

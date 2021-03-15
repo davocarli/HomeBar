@@ -15,7 +15,14 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
-	<script src="/js/drinkDetails.js"></script>
+	<script src="/js/home-bar.js"></script>
+	<c:if test="${ stockedIngredients != null }">
+		<script>
+			$(function() {
+				detailReplacements("<c:forEach items="${stockedIngredients}" var="ingredient">${ingredient.getFullIngredient()}\n</c:forEach>");
+			})
+		</script>
+	</c:if>
 	</head>
 	<body>
 		<!-- NAVBAR -->
@@ -59,7 +66,7 @@
 			</div>
 		</div>
 		<!-- CONTENT -->
-		<div style="padding: 2% 5%;">
+		<div id="content" style="padding: 2% 5%;">
 			<c:choose>
 				<c:when test="${ recipe.image.length() > 0 }">	
 					<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
@@ -70,9 +77,9 @@
 					        <div class="uk-card-body">
 					            <h3 style="display: inline-block;" class="uk-card-title">${ recipe.name }</h3><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
 					            <h4>Ingredients</h4>
-					            <ul>
+					            <ul id="drink-ingredients">
 					            	<c:forEach items="${ recipe.ingredients }" var="ingredient">
-					            		<li>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li>
+					            		<li data-ingredient="${ ingredient.getFullIngredient() }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">TESTING</div>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
 					            	</c:forEach>
 					            </ul>
 					            <h4>Method</h4>
@@ -86,9 +93,9 @@
 			            <h3 style="display: inline-block;" class="uk-card-title">${ recipe.name }</h3><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
 			            <div>
 			            	<h4>Ingredients</h4>
-			            	<ul>
+			            	<ul id="drink-ingredients">
 			            		<c:forEach items="${ recipe.ingredients }" var="ingredient">
-			            			<li>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li>
+			            			<li data-ingredient="${ ingredient.getFullIngredient() }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">TESTING</div>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
 			            		</c:forEach>
 			            	</ul>
 			            </div>

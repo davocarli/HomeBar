@@ -134,3 +134,13 @@ li.filter-divider {
 .uk-nav-primary li.uk-active a {
 	color: black!important;
 }
+.uk-iconnav.uk-iconnav-vertical.drink-ingredients li {
+	padding-top: 3px;
+	width: fit-content;
+}
+ul.uk-iconnav.uk-iconnav-vertical.drink-ingredients {
+	padding-left: 15px;
+}
+.ingredient-drop-hidden div {
+	display: none;
+}

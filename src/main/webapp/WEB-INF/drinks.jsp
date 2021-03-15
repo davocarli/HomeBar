@@ -17,21 +17,14 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
-	<c:if test="${ stockedIngredients != null }"><script src="/js/drinkList.js"></script></c:if>
+	<script src="/js/home-bar.js"></script>
+	<c:if test="${ stockedIngredients != null }">
 	<script>
-		function toggleFilters() {
-				$('div.filter-menu').height($('ul.filter-menu').height()+6);
-				$('ul.filter-menu').toggleClass('expand');
-				$('#filter-dropdown-button').toggleClass('expand');
-				$('div.filter-menu').animate({'height': $('ul.filter-menu').height()+6}, 150, 
-						function() {
-							$('div.filter-menu').css('height', 'auto');
-							$('.uk-sticky-placeholder').height($('div.filter-menu').height());
-					}
-				);
-				/* height($('ul.filter-menu').height()+6); */
-			}
+		$(function() {
+			initDrinkFilters()
+		});
 	</script>
+	</c:if>
 	</head>
 	<body>
 		<!-- NAVBAR -->
@@ -94,8 +87,7 @@
 									</c:forEach>
 								</ul>
 							</div>
-							<a id="filter-dropdown-button" href="javascript:void(0);" onClick="toggleFilters()" uk-icon="icon: chevron-down; ratio: 1.6" style="padding: 0px; margin-right: -20px;"></a>
-							<!-- <span uk-icon="icon: chevron-right; ratio: 1.6" style="padding: 0px;"></span> -->
+							<a id="filter-dropdown-button" href="javascript:void(0);" onClick="dropdownFilters()" uk-icon="icon: chevron-down; ratio: 1.6" style="padding: 0px; margin-right: -20px;"></a>
 						</div>
 					</div>
 			</c:if>
