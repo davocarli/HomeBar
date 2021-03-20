@@ -34,10 +34,18 @@ public class IngredientService {
 	
 	// Get All Substitutes for all ingredients with this name
 	public List<String> getSubstituteRecommendations(String ingredientName) {
-		List<String> allSubstitutes = repo.findIngredientRecommendations(ingredientName);
-		String joinedList = String.join("\n", allSubstitutes);
-		Set<String> uniqueSet = new HashSet<String>(Arrays.asList(joinedList.split("\n")));
-		return new ArrayList<String>(uniqueSet);
+		List<Ingredient> ingredients = repo.findAllByNameContainingIgnoreCaseOrSubstituteNamesContainingIgnoreCase(ingredientName, ingredientName);
+		List<String> strings = new ArrayList<String>();
+		
+		for (int i = 0; i < ingredients.size(); i++) {
+			Ingredient ingredient = ingredients.get(i);
+			String subs = ingredient.getSubstituteNames();
+			if (subs != null) {
+				strings.addAll(Arrays.asList(subs.split("\\|")));
+			}
+		}
+	
+		return strings;
 	}
 	
 	// Get All Ingredients with the selected name

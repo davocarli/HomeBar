@@ -95,7 +95,6 @@ function initDrinkFilters() {
 				if (anyCommon(fullIngredient, filterArrays[i])) {
 					filters += filterArrays[i][0] + 'S|';
 					if (!presentIngredients.includes(j)) {
-						console.log(ingredients[j]);
 						presentIngredients.push(j);
 					}
 					break innerLoop;
@@ -113,19 +112,6 @@ function initDrinkFilters() {
 		$('.drink-filter.' + group).toggleClass('filter-visible');
 	})
 }
-
-// function initDrinkFilters() {
-
-// 	var filterArrays = [];
-// 	$('.drink-filter:not(.drink-filter-disable)'.each(function() {
-// 		filterArrays.push(splitIngredient($(this).attr('data-filter-text')));
-// 	}));
-
-// 	$('.drink-card').each(function() {
-// 		var card = %(this);
-// 		var ingredients = splitIngredient(card.attr('data-ingredients'));
-// 	})
-// }
 
 function initDrinkForm() {
 	// Add new Ingredients on click
@@ -184,7 +170,42 @@ function initSelectize() {
 		plugins: ['remove_button'],
 		delimiter: '|',
 		create: true
-	})
+	});
+	$('.selectize-single').selectize({
+		create: true,
+		plugins: ['restore_on_backspace'],
+		sortField: 'value'
+	});
+}
+
+function initSubstituteSuggestions() {
+	$('.ingredient-name').on('change', function() {
+		const s = $('.substitute-names')[0].selectize;
+		const selections = s.items;
+		const options = Object.keys(s.options);
+		for (var i = 0; i < options.length; i++) {
+			if (!selections.includes(options[i])) {
+				s.removeOption(options[i]);
+			}
+		}
+		const ingredientName = $(this).val();
+		if (ingredientName.length > 0) {
+			$.ajax('/suggestions/substitutes',
+			{
+				method: "GET",
+				data: {ingredient: ingredientName}
+			})
+			.done(function(data) {
+				const s = $('.substitute-names')[0].selectize
+				for (var i = 0; i < data.length; i++) {
+					if (data[i] != ingredientName) {
+						s.addOption({value: data[i], text: data[i]});
+					}
+				}
+			})
+		}
+	});
+	$('.ingredient-name').trigger('change');
 }
 
 function detailReplacements(fullStock) {

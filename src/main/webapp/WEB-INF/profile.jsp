@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile: home-bar.app</title>
+    <link rel="manifest" href="/manifest/manifest.json">
+    <link rel="shortcut icon" type="image/png" href="/icons/icon_32.png"/>
     <link rel="stylesheet" type="text/css" href="/css/uikit.min.css">
     <script src="/js/uikit.min.js"></script>
     <script src="/js/uikit-icons.min.js"></script>

@@ -144,3 +144,6 @@ ul.uk-iconnav.uk-iconnav-vertical.drink-ingredients {
 .ingredient-drop-hidden div {
 	display: none;
 }
+.selectize-input::after {
+	display: none!important;
+}

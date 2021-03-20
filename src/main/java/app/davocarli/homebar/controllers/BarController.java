@@ -47,9 +47,10 @@ public class BarController {
 		if (user != null) {
 			IngredientUtil classified = new IngredientUtil(user.getIngredients());
 			model.addAttribute("ingredients", classified.getStock());
+			model.addAttribute("ingredientOptions", ingredientService.getIngredientNames());
 			return "bar.jsp";
 		}
-	return "redirect:/login";
+		return "redirect:/login";
 	}
 	
 	@PostMapping("/bar/add")
@@ -130,6 +131,7 @@ public class BarController {
 		Ingredient ingredient = ingredientService.getIngredient(id);
 		if (user != null && ingredient.getUser().getId().equals(user.getId())) {
 			model.addAttribute("ingredient", ingredient);
+			model.addAttribute("ingredientOptions", ingredientService.getIngredientNames());
 			return "editIngredient.jsp";
 		}
 		return "redirect:/bar";

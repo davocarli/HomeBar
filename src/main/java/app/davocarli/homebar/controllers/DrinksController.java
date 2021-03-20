@@ -1,8 +1,12 @@
 package app.davocarli.homebar.controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,6 +99,27 @@ public class DrinksController {
 			return "redirect:/login";
 		}
 		return "newDrink.jsp";
+	}
+	
+	@RequestMapping("/suggestions/substitutes")
+	public ResponseEntity<?> getSubstitutes(@RequestParam(name="ingredient") String ingredientName, HttpSession session, Model model) {
+		List<String> recs = ingredientService.getSubstituteRecommendations(ingredientName);
+		
+		final Map<String, Integer> counter = new HashMap<String, Integer>();
+		for (int i = 0; i < recs.size(); i++) {
+			String str = recs.get(i);
+			counter.put(str, 1 + (counter.containsKey(str) ? counter.get(str) : 0));
+		}
+					
+		List<String> list = new ArrayList<String>(counter.keySet());
+		Collections.sort(list, new Comparator<String>() {
+			@Override
+			public int compare(String x, String y) {
+				return counter.get(y) - counter.get(x);
+			}
+		});
+
+		return ResponseEntity.ok(list);
 	}
 	
 	@PostMapping("/drinks/new")

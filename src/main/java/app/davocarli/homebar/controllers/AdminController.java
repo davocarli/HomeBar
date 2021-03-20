@@ -1,6 +1,11 @@
 package app.davocarli.homebar.controllers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +32,30 @@ public class AdminController {
 		this.userService = userService;
 		this.recipeService = recipeService;
 		this.ingredientService = ingredientService;
+	}
+	
+	@RequestMapping("/test")
+	public String test() {
+		List<String> recs = ingredientService.getSubstituteRecommendations("bourbon");
+		
+		final Map<String, Integer> counter = new HashMap<String, Integer>();
+		for (int i = 0; i < recs.size(); i++) {
+			String str = recs.get(i);
+			counter.put(str, 1 + (counter.containsKey(str) ? counter.get(str) : 0));
+		}
+					
+		List<String> list = new ArrayList<String>(counter.keySet());
+		Collections.sort(list, new Comparator<String>() {
+			@Override
+			public int compare(String x, String y) {
+				return counter.get(y) - counter.get(x);
+			}
+		});
+		
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+		}
+		return "redirect:/";
 	}
 	
 	@RequestMapping("/admintasks/fixliqueuer")

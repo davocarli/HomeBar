@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${ ingredient.name }: Edit</title>
+    <link rel="manifest" href="/manifest/manifest.json">
+    <link rel="shortcut icon" type="image/png" href="/icons/icon_32.png"/>
     <link rel="stylesheet" type="text/css" href="/css/uikit.min.css">
     <script src="/js/uikit.min.js"></script>
     <script src="/js/uikit-icons.min.js"></script>
@@ -14,14 +16,12 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.css">
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
+    <script src="/js/home-bar.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<script>
 		$(function() {
-			$('.selectize').selectize({
-				plugins: ['remove_button'],
-				delimiter: '|',
-				create: true,
-			});
+			initSelectize();
+			initSubstituteSuggestions();
 		})
 	</script>
 	</head>
@@ -71,14 +71,19 @@
 			<h3>Edit ingredient</h3>
 			<form:form class="uk-grid-small" method="POST" action="/ingredients/${ ingredient.id }/edit" modelAttribute="ingredient" uk-grid="true">
 				<div class="uk-width-1-3@s">
-					<form:input class="uk-input" path="name" placeholder="Ingredient Name"/>
+					<form:select class="uk-input selectize-single ingredient-name" path="name" placeholder="Ingredient Name">
+						<option value="${ ingredient.name }">${ ingredient.name }</option>
+						<c:forEach items="${ ingredientOptions }" var="option">
+							<option value="${ option }">${ option }</option>
+						</c:forEach>
+					</form:select>
 				</div>
 				<div class="uk-width-1-2@s">
-					<form:input class="uk-input selectize" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
+					<form:input class="uk-input selectize substitute-names" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
 				</div>
 				<div class="uk-width-1-6@s">
-					<input class="uk-button uk-inline uk-button-primary" type="submit" value="UPDATE"/>
-				</div>	
+					<input class="uk-button uk-inline uk-button-primary" type="submit" value="ADD"/>
+				</div>
 			</form:form>
 		</div>
 	</body>
