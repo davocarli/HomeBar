@@ -22,6 +22,7 @@
 		<script>
 			$(function() {
 				detailReplacements("<c:forEach items="${stockedIngredients}" var="ingredient">${ingredient.getFullIngredient()}\n</c:forEach>");
+				$('#source').html(replaceURLWithHTMLLinks($('#source').html()));
 			})
 		</script>
 	</c:if>
@@ -85,7 +86,7 @@
 					            	</c:forEach>
 					            </ul>
 					            <h4>Method</h4>
-					            <p style="white-space: pre-line;">${ recipe.instructions }<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if></p>
+					            <p id="source" style="white-space: pre-line;">${ recipe.instructions }<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if></p>
 					        </div>
 					    </div>
 					</div>
@@ -103,7 +104,7 @@
 			            </div>
 			            <div>
 			            	<h4>Method</h4>
-			            	<p style="white-space: pre-line;">${ recipe.instructions }<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if></p>
+			            	<p id="source" style="white-space: pre-line;">${ recipe.instructions }<c:if test="${ recipe.source.length() > 0 }"><br><br><b>Source:</b> ${ recipe.source }</c:if></p>
 			            </div>
 					</div>
 				</c:otherwise>

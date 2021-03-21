@@ -113,16 +113,19 @@ function initDrinkFilters() {
 	})
 }
 
-function initDrinkForm() {
+function replaceURLWithHTMLLinks(text) {
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(exp,"<a href='$1'>$1</a>"); 
+}
+
+function initDrinkForm(ingredientOptions) {
 	// Add new Ingredients on click
-	const ingredientFields = '<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid><div class="uk-width-1-3@s"><input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient"/></div><div class="uk-width-1-2@s"><input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..."/></div><div class="uk-width-1-6@s"><input class="uk-input amount" placeholder="Amount"/></div></div>'
+	const ingredientFields = '<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid><div class="uk-width-1-3@s"><select class="uk-input selectize-single selectize-init ingredient-name" type="text" placeholder="Preferred Ingredient"><option value=""></option></select></div><div class="uk-width-1-2@s"><input class="uk-input selectize selectize-init substitute-names" multiple="multiple" placeholder="Acceptable substitutes..." value=""/></div><div class="uk-width-1-6@s"><input class="uk-input amount" placeholder="Amount" value=""/></div></div>'
 	$('#addIngredient').click(function() {
 		$(ingredientFields).insertBefore('#addIngredient');
-		$('.selectize-init').selectize({
-			create: true,
-			delimiter: '|',
-		});
-		$('.selectize-init').addClass('selectize').removeClass('selectize-init');
+		initSelectize(ingredientOptions, '.selectize-init');
+		initSubstituteSuggestions('.selectize-init');
+		$('.selectize-init').removeClass('selectize-init');
 	});
 	// Add initial ingredient
 	$('#addIngredient').click();
@@ -134,8 +137,8 @@ function initDrinkForm() {
 		var ingredients = [];
 		$('.ingredient-list').each(function() {
 			ingredients.push({
-				name: $(this).find('.ingredient').val(),
-				substitutes: $(this).find('.selectize').val(),
+				name: $(this).find('.ingredient-name').val(),
+				substitutes: $(this).find('.substitute-names').val(),
 				amount: $(this).find('.amount').val()
 			})
 		})
@@ -165,24 +168,36 @@ function initDrinkForm() {
 	})
 }
 
-function initSelectize() {
-	$('.selectize').selectize({
+function initSelectize(ingredientOptions, extraClass='') {
+	$(extraClass+'.selectize').selectize({
 		plugins: ['remove_button'],
 		delimiter: '|',
 		create: true
 	});
-	$('.selectize-single').selectize({
-		create: true,
-		plugins: ['restore_on_backspace'],
-		sortField: 'value'
-	});
+	if (ingredientOptions != undefined) {
+		$(extraClass+'.selectize-single').selectize({
+			create: true,
+			plugins: ['restore_on_backspace'],
+			sortField: 'value',
+			options: ingredientOptions
+		})
+	} else {
+		$(extraClass+'.selectize-single').selectize({
+			create: true,
+			plugins: ['restore_on_backspace'],
+			sortField: 'value'
+		})
+	}
 }
 
-function initSubstituteSuggestions() {
-	$('.ingredient-name').on('change', function() {
-		const s = $('.substitute-names')[0].selectize;
+function initSubstituteSuggestions(extraClass='') {
+	$(extraClass+'.ingredient-name').on('change', function() {
+		console.log('fetching suggestions');
+		const outerDiv = $(this).parents('.ingredient-list');
+		const s = outerDiv.find('.substitute-names')[0].selectize;
 		const selections = s.items;
 		const options = Object.keys(s.options);
+
 		for (var i = 0; i < options.length; i++) {
 			if (!selections.includes(options[i])) {
 				s.removeOption(options[i]);
@@ -196,7 +211,7 @@ function initSubstituteSuggestions() {
 				data: {ingredient: ingredientName}
 			})
 			.done(function(data) {
-				const s = $('.substitute-names')[0].selectize
+				// const s = $('.substitute-names')[0].selectize
 				for (var i = 0; i < data.length; i++) {
 					if (data[i] != ingredientName) {
 						s.addOption({value: data[i], text: data[i]});

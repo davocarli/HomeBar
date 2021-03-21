@@ -70,19 +70,21 @@
 		<div style="padding: 2% 5%">
 			<h3>Edit ingredient</h3>
 			<form:form class="uk-grid-small" method="POST" action="/ingredients/${ ingredient.id }/edit" modelAttribute="ingredient" uk-grid="true">
-				<div class="uk-width-1-3@s">
-					<form:select class="uk-input selectize-single ingredient-name" path="name" placeholder="Ingredient Name">
-						<option value="${ ingredient.name }">${ ingredient.name }</option>
-						<c:forEach items="${ ingredientOptions }" var="option">
-							<option value="${ option }">${ option }</option>
-						</c:forEach>
-					</form:select>
-				</div>
-				<div class="uk-width-1-2@s">
-					<form:input class="uk-input selectize substitute-names" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
-				</div>
-				<div class="uk-width-1-6@s">
-					<input class="uk-button uk-inline uk-button-primary" type="submit" value="ADD"/>
+				<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid>
+					<div class="uk-width-1-3@s">
+						<form:select class="uk-input selectize-single ingredient-name" path="name" placeholder="Ingredient Name">
+							<option value="${ ingredient.name }">${ ingredient.name }</option>
+							<c:forEach items="${ ingredientOptions }" var="option">
+								<option value="${ option }">${ option }</option>
+							</c:forEach>
+						</form:select>
+					</div>
+					<div class="uk-width-1-2@s">
+						<form:input class="uk-input selectize substitute-names" multiple="multiple" path="substituteNames" placeholder="This ingredient can also substitute for..."/>
+					</div>
+					<div class="uk-width-1-6@s">
+						<input class="uk-button uk-inline uk-button-primary" type="submit" value="ADD"/>
+					</div>
 				</div>
 			</form:form>
 		</div>

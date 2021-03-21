@@ -20,7 +20,10 @@
 	<script src="/js/home-bar.js"></script>
 	<script>
 		$(function() {
-			initDrinkForm();
+			const allIngredients = [<c:forEach items="${ ingredientOptions }" var="ingredient">{text: "${ ingredient }", value: "${ ingredient }"},</c:forEach>];
+			initSelectize(allIngredients);
+			initDrinkForm(allIngredients);
+			initSubstituteSuggestions();
 		});
 	</script>
 	</head>
@@ -71,20 +74,20 @@
 			<button id="upload-button" onclick="uploadFile()">UPLOAD</button>
 			<form class="uk-grid-small" uk-grid>
 				<div class="uk-width-5-6@s">
-					<input class="uk-input" type="text" id="name" placeholder="Recipe Name"/>
+					<input class="uk-input" type="text" path="name" id="name" placeholder="Recipe Name"/>
 				</div>
 				<div class="uk-width-1-6@s">
-					<div uk-form-custom="target: true">
-						<input type="file" id="fileupload" name="fileupload" accept="image/*">
-						<input class="uk-input" type="text" placeholder="Upload Image" disabled>
-					</div>
+						<div uk-form-custom="target: true">
+							<input type="file" id="fileupload" name="fileupload" accept="image/*">
+							<input class="uk-input" type="text" placeholder="Replace/Upload Image" disabled>
+						</div>
 				</div>
-				<a class="uk-grid-1-1" id="addIngredient">Add Ingredient</a>
+				<a id="addIngredient">Add Ingredient</a>
 				<div class="uk-width-1-1">
-					<textarea class="uk-textarea" id="instructions" placeholder="Drink Instructions..." rows="10"></textarea>
+					<textarea class="uk-textarea" id="instructions" path="instructions" placeholder="Drink Instructions..." rows="10"></textarea>
 				</div>
-				<div class="uk-width-1-1">
-					<input class="uk-input" type="text" id="source" placeholder="Source (Give credit if this is not your original recipe)."/>
+				<div class="uk-width-1-1-">
+					<input class="uk-input" type="text" id="source" path="source" placeholder="Source (Give credit if this is not your original recipe)."/>
 				</div>
 			</form>
 			<button class="uk-button uk-button-primary" id="submit">SUBMIT</button>

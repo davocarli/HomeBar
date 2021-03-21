@@ -98,6 +98,7 @@ public class DrinksController {
 		if (user == null) {
 			return "redirect:/login";
 		}
+		model.addAttribute("ingredientOptions", ingredientService.getIngredientNames());
 		return "newDrink.jsp";
 	}
 	
@@ -246,6 +247,7 @@ public class DrinksController {
 		Recipe recipe = recipeService.getRecipe(id);
 		if (user != null && recipe.getCreator().getId().equals(user.getId())) { 
 			model.addAttribute("recipe", recipe);
+			model.addAttribute("ingredientOptions", ingredientService.getIngredientNames());
 			return "editDrink.jsp";
 		}
 		return "redirect/login";

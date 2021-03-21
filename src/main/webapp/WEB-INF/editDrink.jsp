@@ -16,8 +16,16 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.css">
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
+	<script src="/js/home-bar.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
-	<script src="/js/newDrink.js"></script>
+	<script>
+		$(function() {
+			const allIngredients = [<c:forEach items="${ ingredientOptions }" var="ingredient">{text: "${ ingredient }", value: "${ ingredient }"},</c:forEach>];
+			initSelectize(allIngredients);
+			initDrinkForm(allIngredients);
+			initSubstituteSuggestions();
+		})
+	</script>
 	</head>
 	<body>
 		<!-- NAVBAR -->
@@ -77,10 +85,12 @@
 				<c:forEach items="${ recipe.ingredients }" var="ingredient">
 					<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid>
 						<div class="uk-width-1-3@s">
-							<input class="uk-input ingredient" type="text" placeholder="Preferred Ingredient" value="${ ingredient.name }"/>
+							<select class="uk-input selectize-single ingredient-name" type="text" placeholder="Preferred Ingredient">
+								<option value="${ ingredient.name }">${ ingredient.name }</option>
+							</select>
 						</div>
 						<div class="uk-width-1-2@s">
-							<input class="uk-input selectize-init" multiple="multiple" placeholder="Acceptable substitutes..." value="${ ingredient.substituteNames }"/>
+							<input class="uk-input selectize substitute-names" multiple="multiple" placeholder="Acceptable substitutes..." value="${ ingredient.substituteNames }"/>
 						</div>
 						<div class="uk-width-1-6@s">
 							<input class="uk-input amount" placeholder="Amount" value="${ ingredient.amount }"/>
