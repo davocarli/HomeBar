@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>  <!DOCTYPE html>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
 <html lang="en">
 	<head>
     <meta charset="UTF-8">
@@ -23,6 +25,7 @@
 			$(function() {
 				detailReplacements("<c:forEach items="${stockedIngredients}" var="ingredient">${ingredient.getFullIngredient()}\n</c:forEach>");
 				$('#source').html(replaceURLWithHTMLLinks($('#source').html()));
+				fillStars(${ recipe.getRatingOfUser(user.id).getRatingValue() })
 			})
 		</script>
 	</c:if>
@@ -79,10 +82,16 @@
 					    <div>
 					        <div class="uk-card-body">
 					            <h3 style="display: inline-block;" class="uk-card-title">${ recipe.name }</h3><c:if test="${ recipe.creator.id == user.id }"> <a href="/drinks/${ recipe.id }/edit" class="uk-link-text">Edit</a></c:if>
+					            <div class="drink-actions">
+					            	<span id="rating" class="text-muted"><c:if test="${ recipe.averageRating != null }"><fmt:formatNumber var="formattedRating" type="number" minFractionDigits="1" maxFractionDigits="1" value="${ recipe.averageRating }"/><span class="rating-number">${ formattedRating }</span></c:if><span class="star" uk-icon="star"></span><c:if test="${ user != null }"><div data-ingredient-id="${ ingredient.id }" class="star-rating-drop" uk-drop="pos: center-left; offset: -40; delay-hide: 1;"><span><button class="star star-1" onClick="rateRecipe(${ recipe.id }, 1)" uk-icon="star"></button><span><button class="star star-2" onClick="rateRecipe(${ recipe.id }, 2)" uk-icon="star"></button><span><button class="star star-3" onClick="rateRecipe(${ recipe.id }, 3)" uk-icon="star"></button><span><button class="star star-4" onClick="rateRecipe(${ recipe.id }, 4)" uk-icon="star"></button><span><button class="star star-5" onClick="rateRecipe(${ recipe.id }, 5)" uk-icon="star"></button></span></span></span></span></span></div></c:if></span>
+						            <c:if test="${ user != null }">
+							            <button class="heart <c:if test="${ recipe.getFavoritedUserIds().contains(user.id) }">active</c:if>" onClick="toggleFavorite(${ recipe.id })" uk-icon="icon: heart"></button>
+						            </c:if>
+					            </div>
 					            <h4>Ingredients</h4>
 					            <ul id="drink-ingredients">
 					            	<c:forEach items="${ recipe.ingredients }" var="ingredient">
-					            		<li data-ingredient="${ ingredient.getFullIngredient() }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">TESTING</div>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
+					            		<li data-ingredient="${ ingredient.getFullIngredient() }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">LOADING</div>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
 					            	</c:forEach>
 					            </ul>
 					            <h4>Method</h4>
@@ -98,7 +107,7 @@
 			            	<h4>Ingredients</h4>
 			            	<ul id="drink-ingredients">
 			            		<c:forEach items="${ recipe.ingredients }" var="ingredient">
-			            			<li data-ingredient="${ ingredient.getFullIngredient() }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">TESTING</div>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
+			            			<li data-ingredient="${ ingredient.getFullIngredient() }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">LOADING</div>${ ingredient.name }<c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
 			            		</c:forEach>
 			            	</ul>
 			            </div>

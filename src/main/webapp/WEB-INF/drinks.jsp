@@ -82,6 +82,7 @@
 									<li class="filter-menu filter-visible" id="filter-reset" uk-filter-control="group: make"><a href="#">All Drinks</a></li>
 									<li class="filter-menu filter-visible" uk-filter-control="filter: [data-can-make='true']; group: make"><a href="#">Drinks I Can Make</a></li>
 									<li class="filter-menu filter-visible" uk-filter-control="filter: [data-creator='${ user.username }']; group: make"><a href="#">My Drinks</a></li>
+									<li class="filter-menu filter-visible" uk-filter-control="filter: [data-favorite='true']; group: make"><a href="#">Favorites</a></li>
 									<li class="filter-divider">|</li>
 									<c:forEach items="${ stockedIngredients }" var="ingredient">
 										<li class="filter-menu filter-visible drink-filter ${ ingredient.id }" data-filter-text="${ fn:replace(ingredient.getFullIngredient().toUpperCase(), '\'', '') }" data-filter-group="${ ingredient.id }" uk-filter-control="filter: [data-ingredients*='${ fn:replace(ingredient.name.toUpperCase(), '\'', '') }']; group: ${ ingredient.id }"><a href="#">${ ingredient.name }</a></li>
@@ -95,7 +96,7 @@
 			</c:if>
 			<ul class="js-filter uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-child-width-1-5@xl uk-text-center home-list" uk-grid="masonry: true">
 				<c:forEach items="${ drinks }" var="drink">
-					<li class="drink-card" data-creator="${ drink.creator.username }" data-ingredients="|${ fn:replace(drink.getAllFullIngredients().toUpperCase(), '\'', '') }|">
+					<li class="drink-card" <c:if test="${ user != null }">data-favorite="${ drink.getRatingOfUser(user.id) != null }"</c:if> data-creator="${ drink.creator.username }" data-ingredients="|${ fn:replace(drink.getAllFullIngredients().toUpperCase(), '\'', '') }|">
 						<div class="uk-card uk-card-default">
 							<c:choose><c:when test="${ assumedUser == null }"><a class="uk-link-text link-card-body" href="/drinks/${ drink.id }"></c:when><c:otherwise><a class="uk-link-text link-card-body" href="/drinks/${ drink.id }?assumeduser=${ assumedUser }"></c:otherwise></c:choose>
 								<c:if test="${ drink.image.length() > 0 }">

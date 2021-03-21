@@ -1,3 +1,5 @@
+// HELPER METHODS
+
 function anyCommon(arr1, arr2) {
 	for (var i = 0; i < arr1.length && i < arr2.length; i++) {
 		s1 = arr1[i];
@@ -39,6 +41,7 @@ function splitIngredient(ingredient) {
 	}
 }
 
+// UX Methods
 function dropdownFilters() {
 	$('div.filter-menu').height($('ul.filter-menu').height()+6);
 	$('ul.filter-menu').toggleClass('expand');
@@ -273,7 +276,51 @@ function cloneIngredient(id) {
 	})
 }
 
+function toggleFavorite(id) {
+	$('.drink-actions button.heart').attr('disabled', 'true');
+	$.ajax('/favorites/toggle',
+		{
+			method: "GET",
+			data: {id: id}
+		})
+	.done(function(result) {
+		if (result) {
+			$('.drink-actions button.heart').addClass('active');
+		} else {
+			$('.drink-actions button.heart').removeClass('active');
+		}
+	})
+	.always(function() {
+		$('.drink-actions button.heart').removeAttr('disabled');
+	});
+}
 
+function fillStars(rating) {
+	if (rating) {
+		for (var i = 1; i <= 5; i++) {
+			if (rating >= i) {
+				$('button.star-'+i).addClass('active');
+			} else {
+				$('button.star-'+i).removeClass('active');
+			}
+		}
+	}
+}
+
+function rateRecipe(id, rating) {
+	$('button.star').attr('disabled', 'true');
+	$.ajax('/drinks/' + id + '/rate', 
+		{
+			method: "GET",
+			data: {rating: rating}
+		})
+	.done(function(data) {
+		fillStars(data);
+	})
+	.always(function() {
+		$('button.star').removeAttr('disabled');
+	})
+}
 
 
 

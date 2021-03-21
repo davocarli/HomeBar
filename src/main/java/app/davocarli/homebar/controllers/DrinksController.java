@@ -34,9 +34,11 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import app.davocarli.homebar.models.Ingredient;
+import app.davocarli.homebar.models.Rating;
 import app.davocarli.homebar.models.Recipe;
 import app.davocarli.homebar.models.User;
 import app.davocarli.homebar.services.IngredientService;
+import app.davocarli.homebar.services.RatingService;
 import app.davocarli.homebar.services.RecipeService;
 import app.davocarli.homebar.services.UserService;
 import app.davocarli.homebar.util.Auth;
@@ -50,6 +52,7 @@ public class DrinksController {
 	private RecipeService recipeService;
 	private RecipeValidator recipeValidator;
 	private IngredientService ingredientService;
+	private RatingService ratingService;
 	
 	private Auth auth;
 	private IngredientUtil ingredientUtil;
@@ -58,12 +61,14 @@ public class DrinksController {
 			UserService userService,
 			RecipeService recipeService,
 			RecipeValidator recipeValidator,
-			IngredientService ingredientService
+			IngredientService ingredientService,
+			RatingService ratingService
 			) {
 		this.userService = userService;
 		this.recipeService = recipeService;
 		this.recipeValidator = recipeValidator;
 		this.ingredientService = ingredientService;
+		this.ratingService = ratingService;
 		
 		this.ingredientUtil = new IngredientUtil();
 		this.auth = new Auth(userService);
@@ -148,6 +153,50 @@ public class DrinksController {
 			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+	}
+	
+	@RequestMapping("/favorites/toggle")
+	public ResponseEntity<?> toggleFavorite(@RequestParam("id") Long id, HttpSession session) {
+		User user = auth.authUser(session);
+		if (user != null) {
+			Recipe recipe = recipeService.getRecipe(id);
+			List<User> favorited = recipe.getFavorited();
+			if (favorited.contains(user)) {
+				favorited.remove(user);
+				recipe.setFavorited(favorited);
+				recipeService.updateRecipe(recipe);
+				return ResponseEntity.ok(false);
+			} else {
+				favorited.add(user);
+				recipe.setFavorited(favorited);
+				recipeService.updateRecipe(recipe);
+				return ResponseEntity.ok(true);
+			}
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	}
+	
+	@RequestMapping("/drinks/{id}/rate")
+	public ResponseEntity<?> rateDrink(@PathVariable("id") Long id, @RequestParam("rating") Long rating, HttpSession session) {
+		User user = auth.authUser(session);
+		if (user != null) {
+			Recipe recipe = recipeService.getRecipe(id);
+			Rating existingRating = recipe.getRatingOfUser(user.getId());
+			if (existingRating != null) {
+				existingRating.setRatingValue(rating);
+				ratingService.updateRating(existingRating);
+			} else {
+				Rating newRating = new Rating();
+				newRating.setRatingValue(rating);
+				newRating.setUser(user);
+				newRating.setRecipe(recipe);
+				ratingService.addRating(newRating);
+			}
+			recipe.updateRating();
+			recipeService.updateRecipe(recipe);
+			return ResponseEntity.ok(rating);
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
 	@PostMapping("/drinks/{id}/edit")

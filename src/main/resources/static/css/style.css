@@ -147,3 +147,41 @@ ul.uk-iconnav.uk-iconnav-vertical.drink-ingredients {
 .selectize-input::after {
 	display: none!important;
 }
+.drink-actions {
+	float: right;
+	margin-top: 15px;
+}
+button.heart {
+	margin-left: 3px;
+}
+.drink-actions button.heart.active svg path {
+	fill: #f0506e;
+	transition: fill .15s ease;
+	stroke: #999!important;
+}
+.drink-actions button.heart svg path {
+	fill: rgba(255,255,255,0);
+	stroke: #999!important;
+	transition: fill .15s ease;
+}
+.drink-actions span.star svg polygon {
+	stroke: #999!important;
+	fill: #999!important;
+}
+a.star {
+	stroke: #999!important;
+}
+span:hover>button.star>svg>polygon, span:hover>button.star>svg>path, span>button.star.active>svg>path {
+	fill: #faa05a!important;
+}
+.star-rating-drop {
+	text-align: center;
+	padding: auto;
+	width: fit-content;
+	background-color: white;
+}
+.rating-number {
+	font-size: 18px;
+	line-height: 18px;
+	vertical-align: middle;
+}

@@ -1,5 +1,6 @@
 package app.davocarli.homebar.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -47,6 +50,14 @@ public class Recipe {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_created")
 	private User creator;
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(
+			name="recipes_favorites",
+			joinColumns=@JoinColumn(name="recipe_id"),
+			inverseJoinColumns=@JoinColumn(name="user_id")
+			)
+	private List<User> favorited;
 	
 	@OneToMany(mappedBy="recipe", fetch=FetchType.LAZY)
 	@JsonIgnore
@@ -106,6 +117,17 @@ public class Recipe {
 	public Long getAverageRating() {
 		return averageRating;
 	}
+	public void updateRating() {
+		if (this.ratings.size() > 0) {
+			Long sum = new Long(0);
+			for (int i = 0; i < this.ratings.size(); i++) {
+				sum += this.ratings.get(i).getRatingValue();
+			}
+			this.averageRating = sum / this.ratings.size();
+		} else {
+			this.averageRating = null;
+		}
+	}
 	public void setAverageRating(Long rating) {
 		this.averageRating = rating;
 	}
@@ -132,4 +154,27 @@ public class Recipe {
 		return ingredients.stream().map(Ingredient::getFullIngredient).collect(Collectors.joining("\n"));
 	}
 	
+	public List<User> getFavorited() {
+		return favorited;
+	}
+	public void setFavorited(List<User> favorited) {
+		this.favorited = favorited;
+	}
+	public List<Long> getFavoritedUserIds() {
+		List<Long> ids = new ArrayList<Long>();
+		for (int i = 0; i < this.favorited.size(); i++) {
+			User user = this.favorited.get(i);
+			ids.add(user.getId());
+		}
+		return ids;
+	}
+	public Rating getRatingOfUser(Long userId) {
+		for (int i = 0; i < this.ratings.size(); i++) {
+			Rating rating = this.ratings.get(i);
+			if (rating.getUser().getId().equals(userId)) {
+				return rating;
+			}
+		}
+		return null;
+	}
 }
