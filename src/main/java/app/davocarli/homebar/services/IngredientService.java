@@ -2,12 +2,11 @@ package app.davocarli.homebar.services;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 
 import app.davocarli.homebar.models.Ingredient;
 import app.davocarli.homebar.models.Recipe;
@@ -17,6 +16,24 @@ import app.davocarli.homebar.validators.IngredientValidator;
 @Service
 public class IngredientService {
 	private final IngredientRepository repo;
+	private final String[][] keywords = { 
+			{"Whiskey", "Whisky"},
+			{"Rye", "Whiskey", "Rye Whiskey", "Whisky", "Rye Whisky"},
+			{"Scotch", "Whiskey", "Whisky", "Scotch Whiskey", "Scotch Whisky"},
+			{"Bourbon", "Bourbon Whiskey", "Bourbon Whisky", "Whiskey", "Whisky"},
+			{"Single Malt", "Whiskey", "Whisky", "Single Malt Whiskey", "Single Malt Whisky"},
+			{"Cognac", "Brandy"},
+			{"Brandy", "Cognac"},
+			{"Vodka"},
+			{"Gin"},
+			{"Lime", "Lime Juice"},
+			{"Reposado", "Tequila"},
+			{"Tequila"},
+			{"Añejo", "Tequila"},
+			{"Anejo", "Tequila"},
+			{"Rum"},
+			{"Rhum"}
+			};
 	
 	public IngredientService(IngredientRepository repo) {
 		this.repo = repo;
@@ -42,6 +59,11 @@ public class IngredientService {
 			String subs = ingredient.getSubstituteNames();
 			if (subs != null) {
 				strings.addAll(Arrays.asList(subs.split("\\|")));
+			}
+		}
+		for (int i = 0; i < keywords.length; i++) {
+			if (StringUtils.containsIgnoreCase(ingredientName, keywords[i][0])) {
+				strings.addAll(Arrays.asList(keywords[i][0]));
 			}
 		}
 	
