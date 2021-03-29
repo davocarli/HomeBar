@@ -160,6 +160,21 @@ public class Recipe {
 	public void setFavorited(List<User> favorited) {
 		this.favorited = favorited;
 	}
+	
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+	public Boolean isFavoritedBy(Long userId) {
+		for (int i = 0; i < this.favorited.size(); i++) {
+			if (this.favorited.get(i).getId().equals(userId)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public List<Long> getFavoritedUserIds() {
 		List<Long> ids = new ArrayList<Long>();
 		for (int i = 0; i < this.favorited.size(); i++) {

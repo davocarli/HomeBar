@@ -37,6 +37,12 @@
 	background-color: #1e87f0!important;
 	color: #fff!important;
 }
+.uk-light .uk-navbar-nav>li>a {
+	color: rgba(255,255,255,.8)
+}
+.uk-light .uk-navbar-nav>li>a:hover {
+	color: rgba(255,255,255,1)
+}
 #upload-button {
 	display: none;
 }
@@ -44,23 +50,42 @@
 	border-radius: 10px;
 }
 .home-image-div {
-	min-height: 200px;
-	max-height: 200px;
+	height: 200px;
 	overflow: hidden;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
+	position:relative;
 }
 .home-image {
-	opacity: 0%;
+	position: absolute;
+		top: -100%;
+		left: 0;
+		right: 0;
+		bottom: -100%;
+	margin: auto;
+	min-width: 100%;
+	min-height: 200px;
 }
+.uk-offcanvas {
+	background-color: rgba(0,0,0,0);
+	transition: background-color 0.15s;
+}
+.uk-offcanvas-overlay.uk-open {
+	background-color: rgba(0,0,0,.5);
+	opacity: 100%;
+}
+.uk-offcanvas-top {
+	height: 30vh;
+	margin: -20px;
+	padding: 20px;
+}
+/* .uk-offcanvas-bar.uk-light {
+	padding: 25vh 20px;
+} */
 .home-list {
 	padding: 20px 20px;
 	background-color: #F8F8F8;
 }
-body {
+html, body {
 	background-color: #F8F8F8;
-	height: 100vh;
 }
 .uk-card-title {
 	margin-top: 10px;
@@ -73,6 +98,12 @@ caption h3 {
 }
 .home-card-footer {
 	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.home-card-footer div{
+	display: inline-block;
+	margin-bottom: 0px;
 }
 .drink-detail-image {
 	max-height: 85vh;
@@ -154,19 +185,22 @@ ul.uk-iconnav.uk-iconnav-vertical.drink-ingredients {
 button.heart {
 	margin-left: 3px;
 }
-.drink-actions button.heart.active svg path {
+.drink-actions button.heart.active svg path, .heart.active svg path {
 	fill: #f0506e;
 	transition: fill .15s ease;
 	stroke: #999!important;
 }
-.drink-actions button.heart svg path {
+.drink-actions button.heart svg path, .heart svg path {
 	fill: rgba(255,255,255,0);
 	stroke: #999!important;
 	transition: fill .15s ease;
 }
-.drink-actions span.star svg polygon {
+.drink-actions span.star svg polygon, .star svg polygon {
 	stroke: #999!important;
 	fill: #999!important;
+}
+.home-card-footer a:hover {
+	text-decoration: none;
 }
 a.star {
 	stroke: #999!important;
@@ -184,4 +218,23 @@ span:hover>button.star>svg>polygon, span:hover>button.star>svg>path, span>button
 	font-size: 18px;
 	line-height: 18px;
 	vertical-align: middle;
+}
+#feedback-form {
+	width: 100%;
+	height: calc(100vh - 40px);
+}
+.navbar-mobile, .navbar-mobile > li, .navbar-mobile > li > a, .navbar-mobile * {
+	height: 50px;
+}
+.uk-offcanvas-close > svg {
+	color: white;
+}
+.no-highlights{
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

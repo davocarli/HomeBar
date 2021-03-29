@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -181,16 +182,19 @@ public class DrinksController {
 		User user = auth.authUser(session);
 		if (user != null) {
 			Recipe recipe = recipeService.getRecipe(id);
-			Rating existingRating = recipe.getRatingOfUser(user.getId());
-			if (existingRating != null) {
-				existingRating.setRatingValue(rating);
-				ratingService.updateRating(existingRating);
+			Rating ratingObject = recipe.getRatingOfUser(user.getId());
+			if (ratingObject != null) {
+				ratingObject.setRatingValue(rating);
+				ratingObject = ratingService.updateRating(ratingObject);
 			} else {
-				Rating newRating = new Rating();
-				newRating.setRatingValue(rating);
-				newRating.setUser(user);
-				newRating.setRecipe(recipe);
-				ratingService.addRating(newRating);
+				ratingObject = new Rating();
+				ratingObject.setRatingValue(rating);
+				ratingObject.setUser(user);
+				ratingObject.setRecipe(recipe);
+				ratingObject = ratingService.addRating(ratingObject);
+				List<Rating> existingRatings = recipe.getRatings();
+				existingRatings.add(ratingObject);
+				recipe.setRatings(existingRatings);
 			}
 			recipe.updateRating();
 			recipeService.updateRecipe(recipe);

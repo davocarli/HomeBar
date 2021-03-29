@@ -1,5 +1,15 @@
 // HELPER METHODS
 
+$(function() {
+	$('body').onSwipe(function(results) {
+		if (results.right) {
+			const scroll = window.scrollY;
+			UIkit.offcanvas('#offcanvas-menu').show();
+			window.scrollTo(0, scroll);
+		}
+	});
+});
+
 function anyCommon(arr1, arr2) {
 	for (var i = 0; i < arr1.length && i < arr2.length; i++) {
 		s1 = arr1[i];

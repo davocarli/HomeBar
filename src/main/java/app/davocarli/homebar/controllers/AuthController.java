@@ -39,7 +39,7 @@ public class AuthController {
 			model.addAttribute("user", new User());
 			return "login.jsp";
 		}
-		return "redirect:/profile";
+		return "redirect:/";
 	}
 	
 	@RequestMapping("/register")
@@ -78,5 +78,10 @@ public class AuthController {
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/";
+	}
+	
+	@RequestMapping("/feedback")
+	public String feedback() {
+		return "feedback.jsp";
 	}
 }
