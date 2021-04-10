@@ -147,7 +147,28 @@ function replaceURLWithHTMLLinks(text) {
 
 function initDrinkForm(ingredientOptions) {
 	// Add new Ingredients on click
-	const ingredientFields = '<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid><div class="uk-width-1-3@s"><select class="uk-input selectize-single selectize-init ingredient-name" type="text" placeholder="Preferred Ingredient"><option value=""></option></select></div><div class="uk-width-1-2@s"><input class="uk-input selectize selectize-init substitute-names" multiple="multiple" placeholder="Acceptable substitutes..." value=""/></div><div class="uk-width-1-6@s"><input class="uk-input amount" placeholder="Amount" value=""/></div></div>'
+	const ingredientFields = 
+`<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid>
+	<div class="uk-width-1-3@s">
+		<select class="uk-input selectize-single selectize-init ingredient-name" type="text" placeholder="Preferred Ingredient">
+			<option value=""></option>
+		</select>
+	</div>
+	<div class="uk-width-2-5@s">
+		<input class="uk-input selectize selectize-init substitute-names" multiple="multiple" placeholder="Acceptable substitutes..." value=""/>
+	</div>
+	<div class="uk-width-1-1 uk-width-1-4@s uk-grid-small" style="padding-right: 0px;" uk-grid>
+		<div class="uk-width-1-2">
+			<input class="uk-input amount" placeholder="Amt." value=""/>
+		</div>
+		<div style="vertical-align: middle; line-height: 2.25" class="uk-width-1-2" style="vertical-align: middle;">
+			<label><input type="checkbox" class="uk-checkbox optional-field"/><span style="margin-left: 2px;" class="uk-hidden@m">Opt.</span> <span class="uk-visible@m">Optional</span></label>
+		</div>
+		<div class="uk-card uk-card-body uk-card-default" uk-drop="pos: left-center">
+			If selected, users will not need to add this ingredient to their bar to see they are able to make this recipe. Recommended for garnishes and common ingredients (like water).
+		</div>
+	</div>
+</div>`
 	$('#addIngredient').click(function() {
 		$(ingredientFields).insertBefore('#addIngredient');
 		initSelectize(ingredientOptions, '.selectize-init');
@@ -166,7 +187,8 @@ function initDrinkForm(ingredientOptions) {
 			ingredients.push({
 				name: $(this).find('.ingredient-name').val(),
 				substitutes: $(this).find('.substitute-names').val(),
-				amount: $(this).find('.amount').val()
+				amount: $(this).find('.amount').val(),
+				optional: $(this).find('.optional-field').is(':checked').toString()
 			})
 		})
 		var data = {
@@ -175,6 +197,7 @@ function initDrinkForm(ingredientOptions) {
 			instructions: $('#instructions').val(),
 			source: $('#source').val()
 		}
+		console.log(data);
 		var url = null;
 		var uploadStatus = $('#upload-button').html();
 		if (uploadStatus == 'UPLOAD') {
@@ -264,7 +287,12 @@ function detailReplacements(fullStock) {
 		if (commonIngredients.length === 0) {
 			bigDrop.html('<a class="uk-link uk-text-warning" href="#" onclick="cloneIngredient(' + bigDrop.attr('data-ingredient-id') + ')">Add to shopping list</a>')
 			smallDrop.html('<a class="uk-link uk-text-warning" href="#" onclick="cloneIngredient(' + bigDrop.attr('data-ingredient-id') + ')">Add to shopping list</a>')
-			li.find('span').attr('uk-icon', 'close');
+			if (li.attr('data-optional') == 'true') {
+				li.find('span').attr('uk-icon', 'icon: minus; ratio: 0.8;');
+				li.find('span').attr('style', 'height: 20px; width: 20px; text-align: center;');
+			} else {
+				li.find('span').attr('uk-icon', 'close');
+			}
 			// li.prepend('<span uk-icon="close"></span>')
 		} else if (commonIngredients.length === 1) {
 			bigDrop.html('Use ' + commonIngredients[0]);
@@ -409,14 +437,17 @@ function createCard(drink, assumedUser=null, hidden=true) {
 	if (favorite != undefined) {
 		loggedIn = true;
 	}
-	let creator = drink.creator;
+
 	let ingredientFilters = drink.ingredientsFilters;
 	let ingredientList = drink.ingredientsList;
-	let drinkId = drink.id;
-	let image = drink.image;
-	let averageRating = Math.round(drink.averageRating * 10) / 10;
-	if (averageRating.toString().length === 1) {
-		averageRating = averageRating.toString() + ".0";
+
+	averageRating = null;
+
+	if (drink.averageRating > 0) {
+		let averageRating = Math.round(drink.averageRating * 10) / 10;
+		if (averageRating.toString().length === 1 ) {
+			averageRating = averageRating.toString() + ".0";
+		}
 	}
 
 	let canMake = false;
@@ -426,6 +457,7 @@ function createCard(drink, assumedUser=null, hidden=true) {
 
 	if (loggedIn) {
 		let ingredients = ingredientFilters.toLowerCase().split('\n').filter(function(el) {return el.replaceAll('|', '').length != 0});;
+		console.log(ingredients);
 
 		for (var i = 0; i < filterArrays.length; i++) {
 			innerLoop:
@@ -454,7 +486,7 @@ function createCard(drink, assumedUser=null, hidden=true) {
 		element += 'style="display: none"';
 	}
 
-	element += `class="drink-card" data-favorite="${favorite}" data-creator="${creator}" data-ingredients="${filters}" data-can-make="${canMake}"><div class="uk-card uk-card-default">`;
+	element += `class="drink-card" data-favorite="${favorite}" data-creator="${drink.creator}" data-ingredients="${filters}" data-can-make="${canMake}"><div class="uk-card uk-card-default">`;
 
 	// Favorite heart
 	if (loggedIn) {
@@ -466,27 +498,31 @@ function createCard(drink, assumedUser=null, hidden=true) {
 	}
 
 	// a tag to link to drink details page
-	element += `<a class="uk-link-text link-card-body" href="/drinks/${drinkId}`;
+	element += `<a class="uk-link-text link-card-body" href="/drinks/${drink.id}`;
 	if (assumedUser != null) {
 		element += `?assumeduser=${assumedUser}`
 	}
 	element += '">'
 
 	// Card Image
-	if (image != null) {
+	if (drink?.image != undefined) {
 		element += '<div class="uk-card-media-top home-image-div">';
-		element += `<img class="home-image" loading="lazy" src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${image}" alt="cocktail" onerror="this.parentElement.style.display='none'">`;
+		element += `<img class="home-image" loading="lazy" src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${drink.image}" alt="cocktail" onerror="this.parentElement.style.display='none'">`;
 		element += '</div>';
 	}
 
 	// Card body
-	element += `<span class="uk-card-body"><h5 class="uk-card-title">${name}</h5><span class="card-text">${ingredientList}</span></span>`;
+	element += `<span class="uk-card-body"><h5 class="uk-card-title">${drink.name}</h5><span class="card-text">${ingredientList}</span></span>`;
 
 	// close a tag
 	element += '</a>';
 
 	// Card footer
-	element += `<div class="uk-card-footer home-card-footer"><div class="uk-align-left"><a href="/profile/${creator}" class="uk-text-small uk-text-muted uk-text-left card-link">Added by ${creator}</a></div><div class="uk-align-right"><span class="rating-number">${averageRating} </span><span class="star" uk-icon="star"></span></div></div>`
+	element += `<div class="uk-card-footer home-card-footer"><div class="uk-align-left"><a href="/profile/${drink.creator}" class="uk-text-small uk-text-muted uk-text-left card-link">Added by ${drink.creator}</a></div><div class="uk-align-right">`
+	if (averageRating) {
+		element += `<span class="rating-number">${averageRating} </span><span class="star" uk-icon="star"></span>`
+	}
+	element += '</div></div>';
 
 	// Add remaining closing tags
 	element = fixHtml(element);

@@ -1,11 +1,15 @@
 package app.davocarli.homebar.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,10 +57,16 @@ public class AuthController {
 	}
 	
 	@PostMapping("/register")
-	public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result) {
+	public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirectAttributes) {
 		registrationValidator.validate(user, result, userService);
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			List<ObjectError> errors = result.getAllErrors();
+			System.out.println(errors);			
+			List<String> errorMessages = new ArrayList<String>();
+			for (ObjectError error : errors) {
+				errorMessages.add(error.getDefaultMessage());
+			}
+			redirectAttributes.addFlashAttribute("formErrors", String.join("<br>", errorMessages));
 			return "redirect:/register";
 		}
 		user = userService.registerUser(user);

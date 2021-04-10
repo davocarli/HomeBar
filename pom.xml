@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>app.davocarli.homebar</groupId>
 	<artifactId>HomeBar</artifactId>
-	<version>0.7.0-SNAPSHOT</version>
+	<version>0.7.1-SNAPSHOT</version>
 	<name>HomeBar</name>
 	<description>Home Bar Management App</description>
 	<properties>

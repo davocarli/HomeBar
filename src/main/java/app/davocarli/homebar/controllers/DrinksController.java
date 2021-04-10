@@ -231,6 +231,7 @@ public class DrinksController {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
+			e.printStackTrace(System.out);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

@@ -31,8 +31,9 @@ public class IngredientValidator implements Validator {
 		Ingredient ingredient = (Ingredient)target;
 		
 		String status = ingredient.getStatus();
+		String name = ingredient.getName();
 		
-		if (ingredient.getName().length() < 3 ||
+		if (name == null || name.length() < 3 ||
 			(
 				status != "stock" &&
 				status != "shop" &&

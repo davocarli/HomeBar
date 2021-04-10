@@ -25,37 +25,37 @@ public class RegistrationValidator implements Validator {
 		
 		// Passwords don't match
 		if (!user.getPassword().equals(user.getPasswordConfirmation())) {
-			errors.rejectValue("passwordConfirmation", "MATCH");
+			errors.rejectValue("passwordConfirmation", "MATCH", "Your passwords do not match.");
 		} 
 		
 		// Password is too short
 		if (user.getPassword().length() < 8) {
-			errors.rejectValue("password", "LENGTH");
+			errors.rejectValue("password", "LENGTH", "Your password must be at least 8 characters.");
 		} 
 		
 		// First Name is blank
 		if (user.getFirstName().length() < 1) {
-			errors.rejectValue("firstName", "EMPTY");
+			errors.rejectValue("firstName", "EMPTY", "Please enter a first name.");
 		}
 		
 		// Last Name is blank
 		if (user.getLastName().length() < 1) {
-			errors.rejectValue("lastName", "EMPTY");
+			errors.rejectValue("lastName", "EMPTY", "Please enter a last name.");
 		}
 		
 		// Username is too short
 		if (user.getUsername().length() < 4) {
-			errors.rejectValue("username", "LENGTH");
+			errors.rejectValue("username", "LENGTH", "Your username must be at least 4 characters.");
 		}
 		
 		// Username is taken
 		if (service != null && service.findByUsername(user.getUsername()) != null) {
-			errors.rejectValue("username", "TAKEN");
+			errors.rejectValue("username", "TAKEN", "This username has been taken.");
 		}
 		
 		// Email is taken
 		if (service != null && service.findByEmail(user.getEmail()) != null) {
-			errors.rejectValue("email", "TAKEN");
+			errors.rejectValue("email", "TAKEN", "This email address has been taken.");
 		}
 	}
 	

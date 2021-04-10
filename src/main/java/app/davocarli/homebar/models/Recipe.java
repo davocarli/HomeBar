@@ -153,7 +153,17 @@ public class Recipe {
 	}
 	
 	public String getAllFullIngredients() {
-		return ingredients.stream().map(Ingredient::getFullIngredient).collect(Collectors.joining("\n"));
+		ArrayList fullIngredients = new ArrayList<String>();
+		for (int i = 0; i < this.ingredients.size(); i++) {
+			Ingredient ingredient = this.ingredients.get(i);
+			if (ingredient.getOptional() != true) {
+				fullIngredients.add(ingredient.getFullIngredient());
+			}
+		}
+				
+		return String.join("\n", fullIngredients);
+		
+		// return ingredients.stream().map(Ingredient::getFullIngredient).collect(Collectors.joining("\n"));
 	}
 	
 	public List<User> getFavorited() {

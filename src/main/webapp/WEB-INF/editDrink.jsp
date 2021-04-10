@@ -112,6 +112,11 @@
 							<input class="uk-input" type="text" placeholder="Replace/Upload Image" disabled>
 						</div>
 				</div>
+				<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid>
+					<div class="uk-width-5-6">
+						<h4>Ingredients</h4>
+					</div>
+				</div>
 				<c:forEach items="${ recipe.ingredients }" var="ingredient">
 					<div class="uk-width-1-1 uk-grid-small ingredient-list" style="padding-right: 0px;" uk-grid>
 						<div class="uk-width-1-3@s">
@@ -119,11 +124,19 @@
 								<option value="${ ingredient.name }">${ ingredient.name }</option>
 							</select>
 						</div>
-						<div class="uk-width-1-2@s">
+						<div class="uk-width-2-5@s">
 							<input class="uk-input selectize substitute-names" multiple="multiple" placeholder="Acceptable substitutes..." value="${ ingredient.substituteNames }"/>
 						</div>
-						<div class="uk-width-1-6@s">
-							<input class="uk-input amount" placeholder="Amount" value="${ ingredient.amount }"/>
+						<div class="uk-width-1-1 uk-width-1-4@s uk-grid-small" style="padding-right: 0px;" uk-grid>
+							<div class="uk-width-1-2">
+								<input class="uk-input amount" placeholder="Amt." value="${ ingredient.amount }"/>
+							</div>
+							<div style="vertical-align: middle; line-height: 2.25" class="uk-width-1-2" style="vertical-align: middle;">
+								<label><input type="checkbox" class="uk-checkbox optional-field" <c:if test="${ ingredient.optional }">checked</c:if>/><span style="margin-left: 2px;" class="uk-hidden@m">Opt.</span> <span class="uk-visible@m">Optional</span></label>
+							</div>
+							<div class="uk-card uk-card-body uk-card-default" uk-drop="pos: left-center">
+								If selected, users will not need to add this ingredient to their bar to see they are able to make this recipe. Recommended for garnishes and common ingredients (like water).
+							</div>
 						</div>
 					</div>
 				</c:forEach>

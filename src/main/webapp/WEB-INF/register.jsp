@@ -25,6 +25,7 @@
 			</div>
 			<!-- register -->
 			<form:form method="POST" action="/register" modelAttribute="user">
+				<div class="uk-text-center"><p class="uk-text-danger">${ formErrors }</p></div>
 				<fieldset class="uk-fieldset">
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
@@ -47,19 +48,19 @@
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<form:errors path="username" class="uk-text-danger"/>
-							<form:input class="uk-input uk-border-pill" required="true" placeholder="public username" path="username"/>
+							<form:input class="uk-input uk-border-pill" required="true" placeholder="public username" path="username" minlength="4"/>
 						</div>
 					</div>
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<form:errors path="password" class="uk-text-danger"/>
-							<form:input class="uk-input uk-border-pill" required="true" type="password" placeholder="password" path="password"/>
+							<form:input class="uk-input uk-border-pill" required="true" type="password" placeholder="password" path="password" minlength="8"/>
 						</div>
 					</div>
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<form:errors path="passwordConfirmation" class="uk-text-danger"/>
-							<form:input class="uk-input uk-border-pill" required="true" type="password" placeholder="confirm password" path="passwordConfirmation"/>
+							<form:input class="uk-input uk-border-pill" required="true" type="password" placeholder="confirm password" path="passwordConfirmation" minlength="8"/>
 						</div>
 					</div>
 					<div class="uk-margin-bottom">

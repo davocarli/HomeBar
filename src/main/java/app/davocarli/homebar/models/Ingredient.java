@@ -1,5 +1,6 @@
 package app.davocarli.homebar.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,9 @@ public class Ingredient {
 	
 	private String amount;
 	
+	@Column(columnDefinition = "boolean default false")
+	private Boolean optional;
+	
 	public Ingredient() {}
 	
 	public Long getId() {
@@ -61,8 +65,11 @@ public class Ingredient {
 		this.substituteNames = substituteNames;
 	}
 	
-	public String getFullIngredient() {
-		return name + "|" + substituteNames;
+	public String getFullIngredient() { // Specifically for filter purposes
+		if (!this.optional) {
+			return name + "|" + substituteNames;
+		}
+		return "";
 	}
 	
 	public Recipe getRecipe() {
@@ -99,5 +106,12 @@ public class Ingredient {
 	}
 	public void setAmount(String amount) {
 		this.amount = amount;
+	}
+	
+	public Boolean getOptional() {
+		return optional;
+	}
+	public void setOptional(Boolean optional) {
+		this.optional = optional;
 	}
 }

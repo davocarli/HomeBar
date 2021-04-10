@@ -122,6 +122,7 @@ public class IngredientService {
 			ingredient.setName(map.get("name"));
 			ingredient.setSubstituteNames(map.get("substitutes"));
 			ingredient.setAmount(map.get("amount"));
+			ingredient.setOptional(map.get("optional").equals("true"));
 			ingredient.setRecipe(recipe);
 			ingredient.setStatus("recipe");
 			if (validator.validate(ingredient)) {
