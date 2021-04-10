@@ -65,6 +65,8 @@ public class Recipe {
 	
 	private String source;
 	
+	private Double ordering;
+	
 	private Long averageRating;
 	
 	public Long getId() {
@@ -191,5 +193,11 @@ public class Recipe {
 			}
 		}
 		return null;
+	}
+	public Double getOrder() {
+		return ordering;
+	}
+	public void setOrder(Double order) {
+		this.ordering = order;
 	}
 }

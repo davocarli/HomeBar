@@ -1,11 +1,30 @@
 // HELPER METHODS
 
+var drinkCounter = 0;
+var requestingDrinks = false;
+var filterArrays = [];
+
+function isElementInViewport (el) {
+
+    // Special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+    );
+}
+
 $(function() {
 	$('body').onSwipe(function(results) {
-		if (results.right) {
-			const scroll = window.scrollY;
+		if (results.right && !results.down && !results.up) {
 			UIkit.offcanvas('#offcanvas-menu').show();
-			window.scrollTo(0, scroll);
 		}
 	});
 });
@@ -86,44 +105,39 @@ async function uploadFile() {
 
 function initDrinkFilters() {
 
-	var filterArrays = [];
-
 	$('.drink-filter:not(.drink-filter-disable)').each(function() {
 		filterArrays.push(splitIngredient($(this).attr('data-filter-text')));
 	});
 
-	$('.drink-card').each(function() {
-		var card = $(this);
-		var ingredients = card.attr('data-ingredients').toLowerCase().split('\n').filter(function(el) {return el.replaceAll('|', '').length != 0});
-
-		var filters = '';
-
-		var presentIngredients = [];
-
-		for (var i = 0; i < filterArrays.length; i++) {
-			innerLoop:
-			for (var j = 0; j < ingredients.length; j++) {
-				var fullIngredient = ingredients[j].split('|');
-
-				if (anyCommon(fullIngredient, filterArrays[i])) {
-					filters += filterArrays[i][0] + 'S|';
-					if (!presentIngredients.includes(j)) {
-						presentIngredients.push(j);
-					}
-					break innerLoop;
-				}
-			}
+	$('#loading-indicator-spinner').isInViewport(function(status) {
+		if (status === 'entered') {
+			loadDrinks();
 		}
-		if (presentIngredients.length == ingredients.length) {
-			card.attr('data-can-make', 'true');
-		};
-		card.attr('data-ingredients', filters.toUpperCase());
-	});
+	})
 
 	$('.drink-filter').click(function() {
 		let group = $(this).attr('data-filter-group');
 		$('.drink-filter.' + group).toggleClass('filter-visible');
 	})
+
+	$('#filter-element').on('afterFilter', function() {
+		loadDrinks();
+	})
+}
+
+function loadDrinks() {
+	let spinner = $('#loading-indicator-spinner');
+	if (spinner.length && isElementInViewport(spinner)) {
+		getNextDrinks();
+		let interval = setInterval(function() {
+			let spinner = $('#loading-indicator-spinner');
+			if (spinner.length && isElementInViewport(spinner)) {
+				getNextDrinks();
+			} else {
+				clearInterval(interval);
+			}
+		}, 100)
+	}
 }
 
 function replaceURLWithHTMLLinks(text) {
@@ -205,7 +219,6 @@ function initSelectize(ingredientOptions, extraClass='') {
 
 function initSubstituteSuggestions(extraClass='') {
 	$(extraClass+'.ingredient-name').on('change', function() {
-		console.log('fetching suggestions');
 		const outerDiv = $(this).parents('.ingredient-list');
 		const s = outerDiv.find('.substitute-names')[0].selectize;
 		const selections = s.items;
@@ -332,8 +345,154 @@ function rateRecipe(id, rating) {
 	})
 }
 
+function getNextDrinks() {
+	getDrinkCards(drinkCounter, drinkCounter+10);
+}
 
+function getDrinkCards(start, end) {
+	if (!requestingDrinks) {
+		requestingDrinks = true;
+		var urlParams = new URLSearchParams(window.location.search);
+		data = {
+			start: start,
+			end: end
+		}
+		assumedUser=null;
+		if (urlParams.has('assumeduser')) {
+			assumedUser = urlParams.get(assumeduser);
+		}
+		$.ajax('/api/drinks', {
+			method: "GET",
+			data: {
+				start: start,
+				end: end
+			}
+		})
+		.done(function(response) {
+			if (response.status == 'success') {
+				data = response.data;
+				for (var i = 0; i < data.length; i++) {
+					drink = data[i];
+					card = createCard(drink, assumedUser);
+					$('#drinks-list').append(card);
+				}
+				$('li.filter-refresh:not(.uk-active)').trigger('click');
+				drinkCounter = response.end;
+				if (drinkCounter >= response.totalResults) {
+					endHomeLoading();
+				}
+			}
+		}).always(function() {
+			requestingDrinks = false;
+		})
+	}
+}
 
+function endHomeLoading() {
+	$('#loading-indicator').html('Oh no! We ran out of drinks!<br><a class="uk-link-text" href="/drinks/new">Submit a new one?</a>');
+}
+
+function fixHtml(html){
+  var div = document.createElement('div');
+  div.innerHTML=html
+  return (div.innerHTML);
+}
+
+function createCard(drink, assumedUser=null, hidden=true) {
+	let favorite = drink?.favorite;
+	let favoriteActive = ''; 
+	if (favorite) {
+		favoriteActive = ' active';
+	}
+
+	let loggedIn = false;
+	if (favorite != undefined) {
+		loggedIn = true;
+	}
+	let creator = drink.creator;
+	let ingredientFilters = drink.ingredientsFilters;
+	let ingredientList = drink.ingredientsList;
+	let drinkId = drink.id;
+	let image = drink.image;
+	let averageRating = Math.round(drink.averageRating * 10) / 10;
+	if (averageRating.toString().length === 1) {
+		averageRating = averageRating.toString() + ".0";
+	}
+
+	let canMake = false;
+
+	var filters = '';
+	var presentIngredients = [];
+
+	if (loggedIn) {
+		let ingredients = ingredientFilters.toLowerCase().split('\n').filter(function(el) {return el.replaceAll('|', '').length != 0});;
+
+		for (var i = 0; i < filterArrays.length; i++) {
+			innerLoop:
+			for (var j = 0; j < ingredients.length; j++) {
+				var fullIngredient = ingredients[j].split('|');
+				if (anyCommon(fullIngredient, filterArrays[i])) {
+					filters += filterArrays[i][0].toUpperCase() + 'S|';
+					if (!presentIngredients.includes(j)) {
+						presentIngredients.push(j);
+					}
+					break innerLoop;
+				}
+			}
+		}
+		if (presentIngredients.length == ingredients.length) {
+			canMake = true;
+		}
+	}
+
+	let element = '';
+	let closing = '';
+	// Begin drink card, with filter criteria
+	element += '<li '
+
+	if (hidden && loggedIn) {
+		element += 'style="display: none"';
+	}
+
+	element += `class="drink-card" data-favorite="${favorite}" data-creator="${creator}" data-ingredients="${filters}" data-can-make="${canMake}"><div class="uk-card uk-card-default">`;
+
+	// Favorite heart
+	if (loggedIn) {
+		element += '<span class="heart home-heart-icon'
+		if (favorite) {
+			element += ' active';
+		}
+		element += '" uk-icon="heart"></span>'
+	}
+
+	// a tag to link to drink details page
+	element += `<a class="uk-link-text link-card-body" href="/drinks/${drinkId}`;
+	if (assumedUser != null) {
+		element += `?assumeduser=${assumedUser}`
+	}
+	element += '">'
+
+	// Card Image
+	if (image != null) {
+		element += '<div class="uk-card-media-top home-image-div">';
+		element += `<img class="home-image" loading="lazy" src="https://s3-us-west-2.amazonaws.com/home-bar.app/recipeImages/500/${image}" alt="cocktail" onerror="this.parentElement.style.display='none'">`;
+		element += '</div>';
+	}
+
+	// Card body
+	element += `<span class="uk-card-body"><h5 class="uk-card-title">${name}</h5><span class="card-text">${ingredientList}</span></span>`;
+
+	// close a tag
+	element += '</a>';
+
+	// Card footer
+	element += `<div class="uk-card-footer home-card-footer"><div class="uk-align-left"><a href="/profile/${creator}" class="uk-text-small uk-text-muted uk-text-left card-link">Added by ${creator}</a></div><div class="uk-align-right"><span class="rating-number">${averageRating} </span><span class="star" uk-icon="star"></span></div></div>`
+
+	// Add remaining closing tags
+	element = fixHtml(element);
+
+	return element;
+}
 
 
 

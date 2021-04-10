@@ -1,3 +1,5 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<spring:eval expression="@environment.getProperty('application.version')" var="appversion" />
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -5,6 +7,7 @@
 <html lang="en">
 	<head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#1e87f0">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${ ingredient.name }: Edit</title>
     <link rel="manifest" href="/manifest/manifest.json">
@@ -17,8 +20,8 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
     <script src="/js/swipe.js"></script>
-    <script src="/js/home-bar.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/home-bar.js?${ appversion }"></script>
+	<link rel="stylesheet" type="text/css" href="/css/style.css?${ appversion }">
 	<script>
 		$(function() {
 			initSelectize();
@@ -87,7 +90,7 @@
 				<ul class="uk-nav uk-nav-primary">
 					<li><a href="/bar">My Bar</a></li>
 					<li><a href="/shopping">Shopping List</a></li>
-					<li><c:choose><c:when test="${ assumedUser.length() > 0 }"><a href="/">Make a Drink</a></c:when><c:otherwise><a href="/?assumeduser=${ assumedUser }">Make a Drink</a></c:otherwise></c:choose></li>
+					<li><c:choose><c:when test="${ assumedUser == null }"><a href="/">Make a Drink</a></c:when><c:otherwise><a href="/?assumeduser=${ assumedUser }">Make a Drink</a></c:otherwise></c:choose></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
 					<li><c:if test="${ user != null }"><a href="/logout">Log Out</a></c:if></li>
 				</ul>

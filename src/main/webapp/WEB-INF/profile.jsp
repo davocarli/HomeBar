@@ -1,3 +1,5 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<spring:eval expression="@environment.getProperty('application.version')" var="appversion" />
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -6,6 +8,7 @@
 <html lang="en">
 	<head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#1e87f0">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile: home-bar.app</title>
     <link rel="manifest" href="/manifest/manifest.json">
@@ -18,8 +21,8 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
     <script src="/js/swipe.js"></script>
-    <script src="/js/home-bar.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/home-bar.js?${ appversion }"></script>
+	<link rel="stylesheet" type="text/css" href="/css/style.css?${ appversion }">
 	</head>
 	<body>
 		<!-- DESKTOP NAVBAR -->
@@ -82,7 +85,7 @@
 				<ul class="uk-nav uk-nav-primary">
 					<li><a href="/bar">My Bar</a></li>
 					<li><a href="/shopping">Shopping List</a></li>
-					<li><c:choose><c:when test="${ assumedUser.length() > 0 }"><a href="/">Make a Drink</a></c:when><c:otherwise><a href="/?assumeduser=${ assumedUser }">Make a Drink</a></c:otherwise></c:choose></li>
+					<li><c:choose><c:when test="${ assumedUser == null }"><a href="/">Make a Drink</a></c:when><c:otherwise><a href="/?assumeduser=${ assumedUser }">Make a Drink</a></c:otherwise></c:choose></li>
 					<li><a href="/drinks/new">Add a Drink</a></li>
 					<li><c:if test="${ user != null }"><a href="/logout">Log Out</a></c:if></li>
 				</ul>
@@ -114,18 +117,19 @@
 							</c:otherwise>
 						</c:choose>
 			        </div>
-			        <div class="uk-card-footer">
-			        	<c:if test="${ profile.showBar || profile.id == user.id }">
-			        		<h3>This User's Bar<c:if test="${ !profile.showBar }"><span class="uk-text-small uk-text-muted"> (Only Visible to You)</span></c:if> <c:if test="${ profile.showBar }"><a class="uk-text-small uk-card-text uk-card-link uk-text-muted" style="float: right;" href="/?assumeduser=${ profile.username }">Browse Drinks as This User</a></c:if></h3>
-			        		<ul class="uk-child-width-1-1 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width1-5@l uk-text-center" uk-grid="true">
+			        <c:if test="${ profile.showBar || profile.id == user.id }">
+			        	<div class="uk-card-footer">
+			        		<h3 style="margin-bottom: 0px;">This User's Bar<c:if test="${ !profile.showBar }"><span class="uk-text-small uk-text-muted"> (Only Visible to You)</span></c:if></h3>
+			        		<c:if test="${ profile.showBar }"><a class="uk-text-small uk-card-text uk-card-link uk-text-muted" href="/?assumeduser=${ profile.username }">Browse Drinks as This User</a></c:if>
+			        		<ul class="uk-child-width-1-1 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width1-5@l uk-text-center" style="width: 100%; margin-left: 0px; margin-bottom: 10px; margin-top: 15px;" uk-grid="true">
 			        			<c:forEach items="${ profile.ingredients }" var="ingredient">
 			        				<c:if test="${ ingredient.status == 'stock' }">
 			        					<li>${ ingredient.name }</li>
 			        				</c:if>
 			        			</c:forEach>
 			        		</ul>
-			        	</c:if>
-			        </div>
+			        	</div>
+			        </c:if>
 			    </div>
 			</div>
        		<h4>Drinks Added By This User</h4>

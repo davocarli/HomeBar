@@ -238,3 +238,17 @@ span:hover>button.star>svg>polygon, span:hover>button.star>svg>path, span>button
   -ms-user-select: none;
   user-select: none;
 }
+.home-heart-icon {
+	z-index: 1000;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+li.filter-refresh {
+	display: none;
+}
+#loading-indicator {
+	text-align: center;
+	background-color: #F8F8F8;
+	height: 50px;
+}

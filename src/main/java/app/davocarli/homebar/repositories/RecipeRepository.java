@@ -11,4 +11,5 @@ import app.davocarli.homebar.models.Recipe;
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 	List<Recipe> findAll();
 	List<Recipe> findAllByOrderByAverageRatingDesc();
+	List<Recipe> findAllByOrderByOrdering();
 }

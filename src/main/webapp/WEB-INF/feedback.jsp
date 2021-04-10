@@ -1,3 +1,5 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<spring:eval expression="@environment.getProperty('application.version')" var="appversion" />
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -5,6 +7,7 @@
 <html lang="en">
 	<head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#1e87f0">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="/manifest/manifest.json">
     <link rel="shortcut icon" type="image/png" href="/icons/icon_32.png"/>
@@ -16,9 +19,9 @@
     <link rel="stylesheet" type="text/css" href="/css/selectize.css">
     <link rel="stylesheet" type="text/css" href="/css/selectize.bootstrap3.css">
     <script src="/js/selectize.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css?${ appversion }">
 	<script src="/js/swipe.js"></script>
-	<script src="/js/home-bar.js"></script>
+	<script src="/js/home-bar.js?${ appversion }"></script>
 	<script>
 		$(function() {
 			initSelectize();

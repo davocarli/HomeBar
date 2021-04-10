@@ -82,7 +82,7 @@ public class BarController {
 	
 	@RequestMapping("/shopping")
 	public String myShoppingList(@ModelAttribute("ingredient") Ingredient ingredient, HttpSession session, Model model) {
-		User user = auth.authUser(session);
+		User user = auth.authUser(session, model);
 		if (user != null) {
 			IngredientUtil classified = new IngredientUtil(user.getIngredients());
 			model.addAttribute("ingredients", classified.getShop());

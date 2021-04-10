@@ -20,6 +20,10 @@ public class RecipeService {
 		return repo.findAll();
 	}
 	
+	public List<Recipe> getOrdered() {
+		return repo.findAllByOrderByOrdering();
+	}
+	
 	// Get Sorted
 	public List<Recipe> getSorted() {
 		return repo.findAllByOrderByAverageRatingDesc();

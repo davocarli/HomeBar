@@ -1,3 +1,5 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<spring:eval expression="@environment.getProperty('application.version')" var="appversion" />
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -5,6 +7,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#1e87f0">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log In</title>
     <link rel="manifest" href="/manifest/manifest.json">
@@ -12,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="/css/uikit.min.css">
     <script src="/js/uikit.min.js"></script>
     <script src="/js/uikit-icons.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css?${ appversion }">
 </head>
 <body class="uk-flex uk-flex-center uk-flex-middle uk-background-muted uk-height-viewport" data-uk-height-viewport>
 	<div class="uk-width-medium uk-padding-small">
