@@ -123,6 +123,17 @@ function initDrinkFilters() {
 	$('#filter-element').on('afterFilter', function() {
 		loadDrinks();
 	})
+
+	let fiveSecondLoadCheck = setInterval(function() {
+		let spinner = $('.load-drinks');
+		if (spinner.length) {
+			if (isElementInViewport(spinner)) {
+				getNextDrinks();
+			}
+		} else {
+			clearInterval(fiveSecondLoadCheck);
+		}
+	}, 5000)
 }
 
 function loadDrinks() {
@@ -136,7 +147,7 @@ function loadDrinks() {
 			} else {
 				clearInterval(interval);
 			}
-		}, 5000)
+		}, 1000)
 	}
 }
 
