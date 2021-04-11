@@ -124,16 +124,16 @@ function initDrinkFilters() {
 		loadDrinks();
 	})
 
-	let fiveSecondLoadCheck = setInterval(function() {
+	let oneSecondLoadCheck = setInterval(function() {
 		let spinner = $('.load-drinks');
 		if (spinner.length) {
 			if (isElementInViewport(spinner)) {
 				getNextDrinks();
 			}
 		} else {
-			clearInterval(fiveSecondLoadCheck);
+			clearInterval(oneSecondLoadCheck);
 		}
-	}, 5000)
+	}, 1000)
 }
 
 function loadDrinks() {
@@ -390,7 +390,7 @@ function getNextDrinks() {
 
 function getDrinkCards(start, end) {
 	if (!requestingDrinks) {
-		$('.load-drinks').html('<div id="loading-indicator-spinner" uk-spinner></div> Finding some fancy drinks...')
+		// $('.load-drinks').html('<div id="loading-indicator-spinner" uk-spinner></div> Finding some fancy drinks...')
 		requestingDrinks = true;
 		var urlParams = new URLSearchParams(window.location.search);
 		data = {
@@ -423,7 +423,7 @@ function getDrinkCards(start, end) {
 				}
 			}
 		}).always(function() {
-			$('.load-drinks').html('<a class="uk-link-text" href="#!" onclick="getNextDrinks()">Load more drinks...</a>')
+			// $('.load-drinks').html('<a class="uk-link-text" href="#!" onclick="getNextDrinks()">Load more drinks...</a>')
 			requestingDrinks = false;
 		})
 	}

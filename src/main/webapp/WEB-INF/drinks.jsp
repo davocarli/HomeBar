@@ -29,7 +29,7 @@
 	<script>
 		$(function() {
 			initDrinkFilters();
-			//getDrinkCards(0, 50);
+			getDrinkCards(0, 50);
 		});
 	</script>
 	</head>
