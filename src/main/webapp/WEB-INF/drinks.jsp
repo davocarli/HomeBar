@@ -29,7 +29,7 @@
 	<script>
 		$(function() {
 			initDrinkFilters();
-			getDrinkCards(0, 50);
+			//getDrinkCards(0, 50);
 		});
 	</script>
 	</head>
@@ -128,8 +128,8 @@
 					</div>
 			</c:if>
 			<ul id="drinks-list" class="js-filter uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-child-width-1-5@xl uk-text-center home-list" uk-grid="masonry: true"></ul>
- 			<div id="loading-indicator" style="text-align: center;">
- 				<div id="loading-indicator-spinner" uk-spinner></div> Finding some fancy drinks... 
+ 			<div id="loading-area">
+ 				<span class="load-drinks"><div id="loading-indicator-spinner" uk-spinner></div> Finding some fancy drinks...</span>
  			</div>
 		</div>
 	</body>

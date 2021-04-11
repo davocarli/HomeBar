@@ -109,7 +109,7 @@ function initDrinkFilters() {
 		filterArrays.push(splitIngredient($(this).attr('data-filter-text')));
 	});
 
-	$('#loading-indicator-spinner').isInViewport(function(status) {
+	$('.load-drinks').isInViewport(function(status) {
 		if (status === 'entered') {
 			loadDrinks();
 		}
@@ -126,17 +126,17 @@ function initDrinkFilters() {
 }
 
 function loadDrinks() {
-	let spinner = $('#loading-indicator-spinner');
+	let spinner = $('.load-drinks');
 	if (spinner.length && isElementInViewport(spinner)) {
 		getNextDrinks();
 		let interval = setInterval(function() {
-			let spinner = $('#loading-indicator-spinner');
+			let spinner = $('.load-drinks');
 			if (spinner.length && isElementInViewport(spinner)) {
 				getNextDrinks();
 			} else {
 				clearInterval(interval);
 			}
-		}, 100)
+		}, 5000)
 	}
 }
 
@@ -379,6 +379,7 @@ function getNextDrinks() {
 
 function getDrinkCards(start, end) {
 	if (!requestingDrinks) {
+		$('.load-drinks').html('<div id="loading-indicator-spinner" uk-spinner></div> Finding some fancy drinks...')
 		requestingDrinks = true;
 		var urlParams = new URLSearchParams(window.location.search);
 		data = {
@@ -411,13 +412,14 @@ function getDrinkCards(start, end) {
 				}
 			}
 		}).always(function() {
+			$('.load-drinks').html('<a class="uk-link-text" href="#!" onclick="getNextDrinks()">Load more drinks...</a>')
 			requestingDrinks = false;
 		})
 	}
 }
 
 function endHomeLoading() {
-	$('#loading-indicator').html('Oh no! We ran out of drinks!<br><a class="uk-link-text" href="/drinks/new">Submit a new one?</a>');
+	$('#loading-area').html('Oh no! We ran out of drinks!<br><a class="uk-link-text" href="/drinks/new">Submit a new one?</a>');
 }
 
 function fixHtml(html){

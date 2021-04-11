@@ -107,4 +107,20 @@ public class AdminController {
 		}
 	return "redirect:/";
 	}
+	
+	@RequestMapping("/admintasks/fixnulloptionalingredients")
+	public String fixOptionalIngredients(HttpSession session) {
+		Object userId = session.getAttribute("user");
+		if (userId != null && userId.toString().equals("1")) {
+			List<Ingredient> ingredients = ingredientService.getAll();
+			for (int i = 0; i < ingredients.size(); i++) {
+				Ingredient ingredient = ingredients.get(i);
+				if (ingredient.getOptional() == null) {
+					ingredient.setOptional(false);
+					ingredientService.updateIngredient(ingredient);
+				}
+			}
+		}
+		return "redirect:/";
+	}
 }

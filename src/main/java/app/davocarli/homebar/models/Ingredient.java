@@ -12,87 +12,98 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="ingredients")
+@Table(name = "ingredients")
 public class Ingredient {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Size(min=1, message="Ingredient name cannot be empty.")
+
+	@Size(min = 1, message = "Ingredient name cannot be empty.")
 	private String name;
-	
+
 	// Substitute Names will be a "\n" separated list
 	private String substituteNames;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="recipe_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "recipe_id")
 	private Recipe recipe;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private User user;
-	
-	// Used to identify how this ingredient is being used, to avoid needing an additional
-	// model. Status should always be one of "stock", "shop", or "recipe".
+
+	// Used to identify how this ingredient is being used, to avoid needing an
+	// additional model. Status should always be one of "stock", "shop", or
+	// "recipe".
 	private String status;
-	
+
 	private String amount;
-	
-	@Column(columnDefinition = "boolean default false")
-	private Boolean optional;
-	
-	public Ingredient() {}
-	
+
+	private Boolean optional = false;
+
+	public Ingredient() {
+	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String ingredientName) {
 		this.name = ingredientName;
 	}
-	
+
 	public String getSubstituteNames() {
 		return substituteNames;
 	}
+
 	public void setSubstituteNames(String substituteNames) {
 		this.substituteNames = substituteNames;
 	}
-	
-	public String getFullIngredient() { // Specifically for filter purposes
-		if (!this.optional) {
+
+	public String getFullIngredient(Boolean ignoreOptional) { // Specifically for filter purposes
+		if (ignoreOptional || !this.optional) {
 			return name + "|" + substituteNames;
 		}
 		return "";
 	}
-	
+
+	public String getFullIngredient() {
+		return this.getFullIngredient(false);
+	}
+
 	public Recipe getRecipe() {
 		return recipe;
 	}
+
 	public void setRecipe(Recipe recipe) {
 		this.recipe = recipe;
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public String getStatus() {
 		return status;
 	}
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public String getStockedList() {
 		if (status.equals("stock")) {
 			return getFullIngredient();
@@ -100,17 +111,19 @@ public class Ingredient {
 			return "";
 		}
 	}
-	
+
 	public String getAmount() {
 		return amount;
 	}
+
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
-	
+
 	public Boolean getOptional() {
 		return optional;
 	}
+
 	public void setOptional(Boolean optional) {
 		this.optional = optional;
 	}

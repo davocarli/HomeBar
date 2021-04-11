@@ -121,7 +121,7 @@
 					            <h4>Ingredients</h4>
 					            <ul id="drink-ingredients">
 					            	<c:forEach items="${ recipe.ingredients }" var="ingredient">
-					            		<li data-ingredient="${ ingredient.getFullIngredient() }" data-optional="${ ingredient.optional }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">LOADING</div>${ ingredient.name }<c:if test="${ ingredient.optional }"> (Optional)</c:if><c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
+					            		<li data-ingredient="${ ingredient.getFullIngredient(true) }" data-optional="${ ingredient.optional }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">LOADING</div>${ ingredient.name }<c:if test="${ ingredient.optional }"> (Optional)</c:if><c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
 					            	</c:forEach>
 					            </ul>
 					            <h4>Method</h4>
@@ -144,7 +144,7 @@
 				            	<h4>Ingredients</h4>
 				            	<ul id="drink-ingredients">
 				            		<c:forEach items="${ recipe.ingredients }" var="ingredient">
-				            			<li data-ingredient="${ ingredient.getFullIngredient() }" data-optional="${ ingredient.optional }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">LOADING</div>${ ingredient.name }<c:if test="${ ingredient.optional }"> (Optional)</c:if><c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
+				            			<li data-ingredient="${ ingredient.getFullIngredient(true) }" data-optional="${ ingredient.optional }"><span></span><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-hidden@m uk-hidden" uk-dropdown="">LOADING</div>${ ingredient.name }<c:if test="${ ingredient.optional }"> (Optional)</c:if><c:if test="${ ingredient.amount.length() > 0 }"> (${ ingredient.amount })</c:if></li><div data-ingredient-id="${ ingredient.id }" class="uk-card uk-card-default uk-card-body ingredient-drop uk-visible@m uk-hidden" uk-dropdown="pos: right-center"></div>
 				            		</c:forEach>
 				            	</ul>
 				            </div>

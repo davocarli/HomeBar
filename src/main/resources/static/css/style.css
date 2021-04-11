@@ -247,8 +247,8 @@ span:hover>button.star>svg>polygon, span:hover>button.star>svg>path, span>button
 li.filter-refresh {
 	display: none;
 }
-#loading-indicator {
+#loading-area {
 	text-align: center;
 	background-color: #F8F8F8;
-	height: 50px;
+	height: 65px;
 }
