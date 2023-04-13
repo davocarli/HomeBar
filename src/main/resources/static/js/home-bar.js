@@ -399,7 +399,7 @@ function getDrinkCards(start, end) {
 		}
 		assumedUser=null;
 		if (urlParams.has('assumeduser')) {
-			assumedUser = urlParams.get(assumeduser);
+			assumedUser = urlParams.get("assumedUser");
 		}
 		$.ajax('/api/drinks', {
 			method: "GET",
